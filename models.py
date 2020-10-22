@@ -42,7 +42,7 @@ class Note(Base):
     edited = Column(DateTime, nullable=False)
 
 
-engine = create_engine('sqlite:///data.db')
+engine = create_engine('sqlite:///database.db')
 
-metadata = MetaData()
-metadata.create_all(engine)
+
+Base.metadata.create_all(engine)
