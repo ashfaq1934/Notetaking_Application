@@ -42,7 +42,7 @@ def register():
                 return redirect(url_for('register'))
             else:
                 hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-                user = User(email=email, hash=hashed)
+                user = User(email=email, password=hashed)
                 db_session.add(user)
                 db_session.commit()
             flash(f'Account {email} registered!')
@@ -76,7 +76,7 @@ def login():
             else:
                 flash('Invalid Login Info!')
                 return redirect(url_for('login'))
-        except AttributeError:
+        except IntegrityError:
             flash('Provide an Email and Password')
             return redirect(url_for('login'))
     return render_template('login.html')
@@ -92,8 +92,8 @@ def logout():
 
 def check_auth(email, password):
     user = db_session.query(User).filter(User.email == email).first()
-    hashed_input = bcrypt.hashpw(password.encode('utf-8'), user.hash)
-    if hashed_input == user.hash:
+    hashed_input = bcrypt.hashpw(password.encode('utf-8'), user.password)
+    if hashed_input == user.password:
         return True
     return False
 
