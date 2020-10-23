@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, create_engine, MetaData, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, create_engine, ForeignKey
 
 Base = declarative_base()
 
@@ -43,6 +43,4 @@ class Note(Base):
 
 
 engine = create_engine('sqlite:///database.db')
-
-
 Base.metadata.create_all(engine)
