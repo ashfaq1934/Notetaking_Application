@@ -1,13 +1,8 @@
-<html>
-<head>
-    <title>Login Form</title>
-</head>
-<body>
-{% include "base.html" %}
+{% extends "base.html" %}
+{% block content %}
     <form method="POST" action="">
         <input type="email" name="email" placeholder="Email">
         <input type="password" name="password" placeholder="Password">
         <input type="submit" value="Login">
     </form>
-</body>
-</html>
+{% endblock %}

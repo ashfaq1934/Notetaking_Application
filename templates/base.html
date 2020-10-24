@@ -4,11 +4,12 @@
     <meta charset="utf-8" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="static/css/global.css">
     <title>Notes</title>
 </head>
 <body>
 <header>
-    <div>
+    <div class="flash-container">
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             <ul class=flashes>
@@ -19,8 +20,32 @@
           {% endif %}
         {% endwith %}
     </div>
+<div class="top-bar">
+     <nav>
+         <div class="site-name"><span>Site Name</span></div>
+         <ul>
+             <li>Browse</li>
+         </ul>
+     </nav>
+    <div class="create-bar">
+        <ul>
+            <li class="create-button"><a href="new-note/">New Note</a></li>
+            <li class="create-button"><a href="new-note/">New Flashcard</a></li>
+            <li class="create-button"><a href="new-note/">New Collection</a></li>
+        </ul>
+    </div>
+</div>
 </header>
-{% block content %}
-{% endblock %}
+<section>
+<aside>
+<div>Collections</div>
+</aside>
+<main>
+<div class="content">
+    {% block content %}
+    {% endblock %}
+</div>
+</main>
+</section>
 </body>
 </html>
