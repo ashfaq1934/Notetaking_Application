@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
+from functools import wraps
 import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -96,6 +97,22 @@ def check_auth(email, password):
     if hashed_input == user.password:
         return True
     return False
+
+
+def requires_login(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        status = session.get('logged_in', False)
+        if not status:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.route('/new-note/', methods=['GET'])
+@requires_login
+def create_note():
+    return 'Create new note'
 
 
 if __name__ == "__main__":

@@ -27,12 +27,19 @@
          <ul>
              <li>Browse</li>
          </ul>
+         <div class="authentication-link">
+             {% if session['logged_in'] %}
+             <a href="{{ url_for('logout') }}">Logout</a>
+             {% else %}
+             <a href="{{ url_for('login') }}">Login</a>
+             {% endif %}
+         </div>
      </nav>
     <div class="create-bar">
         <ul>
-            <li class="create-button"><a href="new-note/">New Note</a></li>
-            <li class="create-button"><a href="new-note/">New Flashcard</a></li>
-            <li class="create-button"><a href="new-note/">New Collection</a></li>
+            <li class="create-button"><a href="{{ url_for('create_note') }}">New Note</a></li>
+            <li class="create-button"><a href="{{ url_for('create_note') }}">New Flashcard</a></li>
+            <li class="create-button"><a href="{{ url_for('create_note') }}">New Collection</a></li>
         </ul>
     </div>
 </div>
