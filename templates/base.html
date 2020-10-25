@@ -4,8 +4,9 @@
     <meta charset="utf-8" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="static/css/global.css">
-    <title>Notes</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}">
+    {% block title %}
+    {% endblock %}
 </head>
 <body>
 <header>
@@ -22,7 +23,7 @@
     </div>
 <div class="top-bar">
      <nav>
-         <div class="site-name"><span>Site Name</span></div>
+         <div class="site-name"><span><a href="{{ url_for('root') }}">Site Name</a></span></div>
          <ul>
              <li>Browse</li>
          </ul>
@@ -38,7 +39,21 @@
 </header>
 <section>
 <aside>
-<div>Collections</div>
+    <div>Collections</div>
+<button class="accordion">Section 1</button>
+<div class="panel">
+  <p>Lorem ipsum dolor sit amet</p>
+</div>
+
+<button class="accordion">Section 2</button>
+<div class="panel">
+    <p>Lorem ipsum dolor sit amet</p>
+</div>
+
+<button class="accordion">Section 3</button>
+<div class="panel">
+    <p>Lorem ipsum dolor sit amet</p>
+</div>
 </aside>
 <main>
 <div class="content">
@@ -47,5 +62,6 @@
 </div>
 </main>
 </section>
+<script type="text/javascript" src="{{ url_for('static', filename='js/global.js') }}"></script>
 </body>
 </html>

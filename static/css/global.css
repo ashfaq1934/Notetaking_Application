@@ -8,6 +8,10 @@ body {
 header{
     width: 100%;
 }
+.top-bar{
+    width: 100%;
+    float: left;
+}
 .create-bar{
     background-color: white;
     border-bottom: 1px solid black;
@@ -49,7 +53,7 @@ nav > ul{
 }
 .create-button{
     background-color: #34AD6C;
-    width: 7%;
+    width: 10%;
     text-align: center;
     padding: 5px;
     border-radius: 500px;
@@ -58,9 +62,13 @@ nav > ul{
 }
 aside{
     width: 15%;
-    padding: 1em;
-    background-color: #855C47;
+    background-color: #a16e54;
     float: left;
+    padding: 1%;
+    margin-top: 1%;
+}
+aside > div{
+    font-size: 20px;
 }
 main{
     width: 85%;
@@ -72,4 +80,27 @@ section{
 .content{
     margin-left: 2%;
     padding: 1%;
+}
+.accordion {
+    color: #444;
+    background-color: #a16e54;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+.active, .accordion:hover {
+
+}
+
+.panel {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
 }
