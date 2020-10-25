@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from models import User
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 app.secret_key = 'A0Zr98j/3yXR~XHH!jmN]LWX/,?RT'
 engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
 
