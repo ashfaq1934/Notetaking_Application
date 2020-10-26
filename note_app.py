@@ -4,7 +4,8 @@ import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-from models import User
+from models import User, Collection
+import uuid
 
 
 app = Flask(__name__, static_folder="static")
@@ -71,7 +72,7 @@ def login():
 
             if check_auth(email, password):
                 session['logged_in'] = True
-                session['email'] = email
+                session['user'] = email
                 flash(f'Logged in, Welcome {email}!')
                 return redirect(url_for('root'))
             else:
@@ -86,7 +87,7 @@ def login():
 @app.route('/logout/')
 def logout():
     session['logged_in'] = False
-    session.pop('email', None)
+    session.pop('user', None)
     flash('Logged out')
     return redirect(url_for('root'))
 
@@ -109,10 +110,25 @@ def requires_login(f):
     return decorated
 
 
-@app.route('/new-note/', methods=['GET'])
+@app.route('/create/collection/', methods=['GET', 'POST'])
 @requires_login
-def create_note():
-    return 'Create new note'
+def create_collection():
+    if request.method == 'POST':
+        try:
+            title = request.form['title']
+            if not title:
+                flash('Provide a title')
+                return redirect(url_for('create_collection'))
+            user = db_session.query(User).filter(User.email == session['user']).first()
+            collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=False)
+            db_session.add(collection)
+            db_session.commit()
+
+        except IntegrityError:
+            flash('Provide a title')
+            return redirect(url_for('create_collection'))
+
+    return render_template('create_collection.html')
 
 
 if __name__ == "__main__":
