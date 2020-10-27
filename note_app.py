@@ -4,7 +4,8 @@ import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-from models import User
+from models import User, Collection
+import uuid
 
 
 app = Flask(__name__, static_folder="static")
@@ -17,9 +18,33 @@ db_session = Session()
 # Todo: implement input sanitization
 
 
+def requires_login(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        status = session.get('logged_in', False)
+        if not status:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated
+
+
+@app.context_processor
+def get_collections():
+    try:
+        user = db_session.query(User).filter(User.email == session['user']).first()
+        collections = db_session.query(Collection).filter(Collection.user_id == user.id).all()
+        return dict(collections=collections)
+    except:
+        return dict(collections=None)
+
+
 @app.route('/', methods=['GET'])
 def root():
-    return render_template('index.html')
+    try:
+        if session['logged_in']:
+            return render_template('index.html')
+    except:
+        return redirect(url_for('login'))
 
 
 @app.route('/register/', methods=['GET', 'POST'])
@@ -47,7 +72,7 @@ def register():
                 db_session.add(user)
                 db_session.commit()
             flash(f'Account {email} registered!')
-            return redirect(url_for('root'))
+            return redirect(url_for('login'))
         except IntegrityError:
             flash('Provide an Email and Password')
             return redirect(url_for('register'))
@@ -71,7 +96,7 @@ def login():
 
             if check_auth(email, password):
                 session['logged_in'] = True
-                session['email'] = email
+                session['user'] = email
                 flash(f'Logged in, Welcome {email}!')
                 return redirect(url_for('root'))
             else:
@@ -86,7 +111,7 @@ def login():
 @app.route('/logout/')
 def logout():
     session['logged_in'] = False
-    session.pop('email', None)
+    session.pop('user', None)
     flash('Logged out')
     return redirect(url_for('root'))
 
@@ -99,20 +124,41 @@ def check_auth(email, password):
     return False
 
 
-def requires_login(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        status = session.get('logged_in', False)
-        if not status:
-            return redirect(url_for('login'))
-        return f(*args, **kwargs)
-    return decorated
-
-
-@app.route('/new-note/', methods=['GET'])
+@app.route('/collection/<uuid>/')
 @requires_login
-def create_note():
-    return 'Create new note'
+def view_collection(uuid):
+    user = db_session.query(User).filter(User.email == session['user']).first()
+    collection = db_session.query(Collection).filter(Collection.user_id == user.id).filter(Collection.uuid == uuid).first()
+    return render_template('collection.html', collection=collection)
+
+
+@app.route('/create/collection/', methods=['GET', 'POST'])
+@requires_login
+def create_collection():
+    if request.method == 'POST':
+        try:
+            title = request.form['title']
+            if not title:
+                flash('Provide a title')
+                return redirect(url_for('create_collection'))
+
+            collection_count = db_session.query(Collection).filter(Collection.title == title).count()
+            if collection_count >= 1:
+                flash('Collection  already exists')
+                return redirect(url_for('create_collection'))
+            else:
+                user = db_session.query(User).filter(User.email == session['user']).first()
+                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=False)
+                db_session.add(collection)
+                db_session.commit()
+                flash(f'Collection {title} created!')
+                return redirect(url_for('root'))
+
+        except IntegrityError:
+            flash('Provide a title')
+            return redirect(url_for('create_collection'))
+
+    return render_template('create_collection.html')
 
 
 if __name__ == "__main__":

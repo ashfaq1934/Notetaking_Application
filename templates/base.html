@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}">
     {% block title %}
     {% endblock %}
@@ -37,31 +38,28 @@
      </nav>
     <div class="create-bar">
         <ul>
-            <li class="create-button"><a href="{{ url_for('create_note') }}">New Note</a></li>
-            <li class="create-button"><a href="{{ url_for('create_note') }}">New Flashcard</a></li>
-            <li class="create-button"><a href="{{ url_for('create_note') }}">New Collection</a></li>
+            <li class="create-button"><a href="#">New Note</a></li>
+            <li class="create-button"><a href="#">New Flashcard</a></li>
+            <li class="create-button"><a href="{{ url_for('create_collection') }}">New Collection</a></li>
         </ul>
     </div>
 </div>
 </header>
 <section>
+{% if collections %}
 <aside>
-    <div>Collections</div>
-<button class="accordion">Section 1</button>
-<div class="panel">
-  <p>Lorem ipsum dolor sit amet</p>
-</div>
-
-<button class="accordion">Section 2</button>
-<div class="panel">
-    <p>Lorem ipsum dolor sit amet</p>
-</div>
-
-<button class="accordion">Section 3</button>
-<div class="panel">
-    <p>Lorem ipsum dolor sit amet</p>
-</div>
+    <div class="collection_title">Collections</div>
+    {% for collection in collections %}
+        <div class="collection">
+            <a href="{{ url_for('view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
+            <button class="accordion"><i class="fa fa-caret-down"></i></button>
+            <div class="panel">
+                <p>Lorem ipsum dolor sit amet</p>
+            </div>
+        </div>
+    {% endfor %}
 </aside>
+{% endif %}
 <main>
 <div class="content">
     {% block content %}
