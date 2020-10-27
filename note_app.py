@@ -119,16 +119,25 @@ def create_collection():
             if not title:
                 flash('Provide a title')
                 return redirect(url_for('create_collection'))
-            user = db_session.query(User).filter(User.email == session['user']).first()
-            collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=False)
-            db_session.add(collection)
-            db_session.commit()
+
+            collection_count = db_session.query(Collection).filter(Collection.title == title).count()
+            if collection_count >= 1:
+                flash('Collection  already exists')
+                return redirect(url_for('create_collection'))
+            else:
+                user = db_session.query(User).filter(User.email == session['user']).first()
+                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=False)
+                db_session.add(collection)
+                db_session.commit()
+                flash(f'Collection {title} created!')
+                return redirect(url_for('root'))
 
         except IntegrityError:
             flash('Provide a title')
             return redirect(url_for('create_collection'))
 
     return render_template('create_collection.html')
+
 
 
 if __name__ == "__main__":
