@@ -89,8 +89,10 @@ section{
     color: #444;
     background-color: #a16e54;
     cursor: pointer;
-    padding: 18px;
-    width: 100%;
+    float: right;
+    padding-bottom: 10px;
+    margin-right: 30%;
+    width: 10%;
     border: none;
     text-align: left;
     outline: none;
@@ -104,5 +106,22 @@ section{
   padding: 0 18px;
   max-height: 0;
   overflow: hidden;
+    float: left;
   transition: max-height 0.2s ease-out;
+}
+
+.collection{
+    width: 100%;
+    float: left;
+}
+.collection_link{
+    float: left;
+    color: #fff;
+    text-decoration: none;
+}
+.collection_title{
+    margin-bottom: 5%;
+    padding: 5%;
+    font-size: x-large;
+    border-bottom: 1px solid black;
 }
