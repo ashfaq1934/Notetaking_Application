@@ -30,7 +30,7 @@ def get_collections():
 
 @app.route('/', methods=['GET'])
 def root():
-    if session['logged_in']:
+    if session.get('logged_in'):
         return render_template('main.html')
     return redirect(url_for('auth.login'))
 
@@ -70,6 +70,11 @@ def create_collection():
             return redirect(url_for('create_collection'))
 
     return render_template('create_collection.html')
+
+
+@app.route('/create/note/', methods=['GET', 'POST'])
+def create_note():
+    return render_template('create_note.html')
 
 
 if __name__ == "__main__":
