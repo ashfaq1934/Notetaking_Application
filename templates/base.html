@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     {% block extra_css %}
     {% endblock %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/global.css') }}">
@@ -52,9 +52,15 @@
     {% for collection in collections %}
         <div class="collection">
             <a href="{{ url_for('view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
-            <button class="accordion">View</button>
+            {% if get_notes(collection.id) %}<button class="accordion"><i class="fa fa-caret-down"></i></button>{% endif %}
             <div class="panel">
-                <p>Lorem ipsum dolor sit amet</p>
+            {% if get_notes(collection.id) %}
+            <ul>
+                {% for note in get_notes(collection.id) %}
+                    <li><a href="{{ url_for('view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
             </div>
         </div>
     {% endfor %}
