@@ -47,16 +47,18 @@ def root():
 @app.route('/collection/<uuid>/')
 @requires_login
 def view_collection(uuid):
-    user = db_session.query(User).filter(User.email == session['user']).first()
-    collection = db_session.query(Collection).filter(Collection.user_id == user.id).filter(Collection.uuid == uuid).first()
-    return render_template('view_collection.html', collection=collection)
+    query = db_session.query(Collection, User).filter(User.email == session['user'])\
+        .filter(Collection.user_id == User.id).filter(Collection.uuid == uuid).first()
+    return render_template('view_collection.html', collection=query.Collection)
 
 
 @app.route('/note/<uuid>/')
 @requires_login
 def view_note(uuid):
-    note = db_session.query(Note).filter(Note.uuid == uuid).first()
-    return render_template('view_note.html', note=note)
+    query = db_session.query(Note, Collection, User).filter(User.email == session['user'])\
+        .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id)\
+        .filter(Note.uuid == uuid).first()
+    return render_template('view_note.html', note=query.Note)
 
 
 @app.route('/create/collection/', methods=['GET', 'POST'])
