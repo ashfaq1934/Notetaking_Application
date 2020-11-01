@@ -22,8 +22,8 @@ db_session = Session()
 @app.context_processor
 def get_collections():
     try:
-        user = db_session.query(User).filter(User.email == session['user']).first()
-        collections = db_session.query(Collection).filter(Collection.user_id == user.id).all()
+        collections = db_session.query(Collection).join(User, Collection.user_id == User.id)\
+            .filter(User.email == session['user']).all()
         return dict(collections=collections)
     except:
         return dict(collections=None)
@@ -32,7 +32,9 @@ def get_collections():
 @app.context_processor
 def notes_processor():
     def get_notes(id):
-        notes = db_session.query(Note).filter(Note.collection_id == id).all()
+        notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Note.collection_id == id).all()
         return notes
     return dict(get_notes=get_notes)
 
@@ -47,18 +49,19 @@ def root():
 @app.route('/collection/<uuid>/')
 @requires_login
 def view_collection(uuid):
-    query = db_session.query(Collection, User).filter(User.email == session['user'])\
-        .filter(Collection.user_id == User.id).filter(Collection.uuid == uuid).first()
-    return render_template('view_collection.html', collection=query.Collection)
+    collection = db_session.query(Collection).join(User, Collection.user_id == User.id)\
+        .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
+    return render_template('view_collection.html', collection=collection)
 
 
 @app.route('/note/<uuid>/')
 @requires_login
 def view_note(uuid):
-    query = db_session.query(Note, Collection, User).filter(User.email == session['user'])\
+    note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id)\
+        .join(User, Collection.user_id == User.id).filter(User.email == session['user'])\
         .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id)\
         .filter(Note.uuid == uuid).first()
-    return render_template('view_note.html', note=query.Note)
+    return render_template('view_note.html', note=note)
 
 
 @app.route('/create/collection/', methods=['GET', 'POST'])
