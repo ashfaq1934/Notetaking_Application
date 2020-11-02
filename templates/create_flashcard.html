@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_flashcard.css') }}">
+{% endblock %}
+{% block title %}
+    <title>New Flashcard</title>
+{% endblock %}
+{% block content %}
+    {% if collections %}
+        <form action="" method="post">
+            <input class="title-input" type="text" name="title" placeholder="Title" />
+            <select name="collection" class="collection-select">
+                {% for collection in collections %}
+                <option value="{{ collection.id }}">{{ collection.title }}</option>
+                {% endfor %}
+            </select>
+            <div class="editor-container">
+                <div class="editor">
+                    <textarea class="term" name="term"></textarea>
+                </div>
+                <div class="editor">
+                    <textarea class="definition" name="definition"></textarea>
+                </div>
+            </div>
+            <div class="save-container">
+                <input class="submit" type="submit" value="Save">
+            </div>
+        </form>
+        {% else %}
+            <p>Please create a collection before creating a flashcard</p>
+            <a class="create-collection" href="{{ url_for('create_collection') }}">Create a collection</a>
+    {% endif %}
+{% endblock %}
+{% block extra_js %}
+{% if collections %}
+<script>
+      $('.term').summernote({
+          tabsize: 1,
+          placeholder: 'Term',
+          height: 120,
+          toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['insert', ['link', 'picture']],
+          ]
+      });
+      $('.definition').summernote({
+          tabsize: 1,
+          placeholder: 'Definition',
+          height: 120,
+          toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['insert', ['link', 'picture']],
+          ]
+      });
+    </script>
+{% endif %}
+{% endblock %}
