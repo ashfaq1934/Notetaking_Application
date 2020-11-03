@@ -30,14 +30,19 @@ def get_collections():
 
 
 @app.context_processor
-def notes_processor():
-    def get_notes(id):
+def resources_processor():
+    def get_resources(id):
         notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
             .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
             .filter(Collection.user_id == User.id).filter(Note.collection_id == id).all()
-        return notes
 
-    return dict(get_notes=get_notes)
+        decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id)\
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Deck.collection_id == id).all()
+
+        return notes, decks
+
+    return dict(get_resources=get_resources)
 
 
 @app.route('/', methods=['GET'])

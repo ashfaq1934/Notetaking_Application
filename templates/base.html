@@ -52,12 +52,17 @@
     {% for collection in collections %}
         <div class="collection">
             <a href="{{ url_for('view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
-            {% if get_notes(collection.id) %}<button class="accordion"><i class="fa fa-caret-down"></i></button>{% endif %}
+            {% if get_resources(collection.id)[0] or get_resources(collection.id)[1] %}
+                <button class="accordion"><i class="fa fa-caret-down"></i></button>
+            {% endif %}
             <div class="panel">
-            {% if get_notes(collection.id) %}
+            {% if get_resources(collection.id) %}
             <ul>
-                {% for note in get_notes(collection.id) %}
+                {% for note in get_resources(collection.id)[0] %}
                     <li><a href="{{ url_for('view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
+                {% endfor %}
+                {% for deck in get_resources(collection.id)[1] %}
+                    <li><a href="{{ url_for('view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a></li>
                 {% endfor %}
             </ul>
             {% endif %}

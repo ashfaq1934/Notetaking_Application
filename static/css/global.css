@@ -109,6 +109,9 @@ section{
     float: left;
   transition: max-height 0.2s ease-out;
 }
+.panel > ul{
+    list-style: none;
+}
 
 .collection{
     width: 100%;
