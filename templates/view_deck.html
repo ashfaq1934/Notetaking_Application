@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>{{ deck.title }}</title>
+{% endblock %}
+{% block content %}
+    <h1>{{ deck.title }}</h1>
+    <div>
+    {% if flashcards %}
+    {% for flashcard in flashcards %}
+        <div>
+        <h3>{{ flashcard.title }}</h3>
+        <div>{{ flashcard.term|safe }}</div>
+        <div>{{ flashcard.definition|safe }}</div>
+        </div>
+    {% endfor %}
+    {% endif %}
+    </div>
+{% endblock %}

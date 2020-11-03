@@ -20,12 +20,23 @@ class Collection(Base):
     public = Column(Boolean, nullable=False)
 
 
-class Flashcard(Base):
-    __tablename__ = 'flashcard'
+class Deck(Base):
+    __tablename__ = 'deck'
     id = Column(Integer, primary_key=True)
     collection_id = Column(Integer, ForeignKey('collection.id'), nullable=False)
     uuid = Column(String(200), unique=True, nullable=False)
-    term = Column(String(200), nullable=False)
+    title = Column(String(200), nullable=False)
+    public = Column(Boolean, nullable=False)
+    edited = Column(DateTime, nullable=False)
+
+
+class Flashcard(Base):
+    __tablename__ = 'flashcard'
+    id = Column(Integer, primary_key=True)
+    deck_id = Column(Integer, ForeignKey('deck.id'), nullable=False)
+    uuid = Column(String(200), unique=True, nullable=False)
+    title = Column(String(200), nullable=False)
+    term = Column(Text, nullable=True)
     definition = Column(Text, nullable=True)
     public = Column(Boolean, nullable=False)
     edited = Column(DateTime, nullable=False)
