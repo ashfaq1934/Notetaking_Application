@@ -90,6 +90,11 @@ def view_deck(uuid):
 def create_collection():
     if request.method == 'POST':
         try:
+            public_checkbox = request.form.get('public')
+            if public_checkbox:
+                public = True
+            else:
+                public = False
             title = request.form['title']
             if not title:
                 flash('Provide a title')
@@ -101,7 +106,7 @@ def create_collection():
                 return redirect(url_for('create_collection'))
             else:
                 user = db_session.query(User).filter(User.email == session['user']).first()
-                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=False)
+                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=public)
                 db_session.add(collection)
                 db_session.commit()
                 flash(f'Collection {title} created!')
@@ -117,6 +122,12 @@ def create_collection():
 @app.route('/create/note/', methods=['GET', 'POST'])
 def create_note():
     if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
+
         title = request.form['title']
         collection = request.form['collection']
         data = request.form['editordata']
@@ -130,7 +141,7 @@ def create_note():
             flash('Note is empty')
             return redirect(url_for('create_note'))
 
-        note = Note(collection_id=collection, uuid=str(uuid.uuid4()), title=title, content=data, public=False,
+        note = Note(collection_id=collection, uuid=str(uuid.uuid4()), title=title, content=data, public=public,
                     edited=datetime.today())
         db_session.add(note)
         db_session.commit()
@@ -142,6 +153,11 @@ def create_note():
 @app.route('/create/deck/', methods=['GET', 'POST'])
 def create_deck():
     if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
         title = request.form['title']
         collection = request.form['collection']
         if not title:
@@ -151,7 +167,7 @@ def create_deck():
             flash('Please choose a collection')
             return redirect(url_for('create_deck'))
 
-        deck = Deck(collection_id=collection, uuid=str(uuid.uuid4()), title=title, public=False,
+        deck = Deck(collection_id=collection, uuid=str(uuid.uuid4()), title=title, public=public,
                     edited=datetime.today())
         db_session.add(deck)
         db_session.commit()

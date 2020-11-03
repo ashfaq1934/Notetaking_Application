@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_collection.css') }}">
+{% endblock %}
 {% block title %}
     <title>Create Note</title>
 {% endblock %}
@@ -7,5 +10,9 @@
     <form action="" method="POST">
     <input type="text" name="title" />
     <input type="submit" value="Submit" />
+    <label class="switch">
+        <input type="checkbox" name="public">
+        <span class="slider round"></span>
+    </label>
     </form>
 {% endblock %}
