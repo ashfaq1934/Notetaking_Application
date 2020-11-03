@@ -3,17 +3,19 @@
   outline: 0;
   background: transparent;
   border-bottom: 1px solid black;
-    margin-bottom: 2%;
-    padding: 1%;
-    height: 10%;
-    font-size: x-large;
+  margin-bottom: 2%;
+  padding: 1%;
+  height: 10%;
+  font-size: x-large;
+}
+.options-container{
+  float: right;
+  width: 20%;
 }
 .deck-select{
-  width: 10%;
-  float: right;
   margin-top: 1%;
   margin-right: 10%;
-  padding: 0.5%;
+  padding: 2%;
 }
 .submit{
   margin-top: 1%;
