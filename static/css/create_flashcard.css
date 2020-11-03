@@ -8,7 +8,7 @@
     height: 10%;
     font-size: x-large;
 }
-.collection-select{
+.deck-select{
   width: 10%;
   float: right;
   margin-top: 1%;
@@ -18,7 +18,7 @@
 .submit{
   margin-top: 1%;
 }
-.create-collection{
+.create-deck{
   background-color: #0E6BA8;
   color: white;
   text-decoration: none;

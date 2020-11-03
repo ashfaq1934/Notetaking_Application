@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, flash, ses
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-from models import User, Collection, Note, Flashcard
+from models import User, Collection, Note, Flashcard, Deck
 import uuid
 from authentication.auth import authentication, requires_login
 from datetime import datetime
@@ -65,14 +65,19 @@ def view_note(uuid):
     return render_template('view_note.html', note=note)
 
 
-@app.route('/flashcard/<uuid>/')
+@app.route('/deck/<uuid>/')
 @requires_login
-def view_flashcard(uuid):
-    flashcard = db_session.query(Flashcard).join(Collection, Flashcard.collection_id == Collection.id) \
-        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
-        .filter(Collection.user_id == User.id).filter(Flashcard.collection_id == Collection.id) \
-        .filter(Flashcard.uuid == uuid).first()
-    return render_template('view_flashcard.html', flashcard=flashcard)
+def view_deck(uuid):
+    try:
+        deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
+            .filter(Deck.uuid == uuid).first()
+        flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()
+    except:
+        deck = None
+        flashcards = None
+    return render_template('view_deck.html', deck=deck, flashcards=flashcards)
 
 
 @app.route('/create/collection/', methods=['GET', 'POST'])
@@ -129,18 +134,39 @@ def create_note():
     return render_template('create_note.html')
 
 
+@app.route('/create/deck/', methods=['GET', 'POST'])
+def create_deck():
+    if request.method == 'POST':
+        title = request.form['title']
+        collection = request.form['collection']
+        if not title:
+            flash('Please include title')
+            return redirect(url_for('create_deck'))
+        if not collection:
+            flash('Please choose a collection')
+            return redirect(url_for('create_deck'))
+
+        deck = Deck(collection_id=collection, uuid=str(uuid.uuid4()), title=title, public=False,
+                    edited=datetime.today())
+        db_session.add(deck)
+        db_session.commit()
+        flash('Deck Saved!')
+        return redirect(url_for('root'))
+    return render_template('create_deck.html')
+
+
 @app.route('/create/flashcard/', methods=['GET', 'POST'])
 def create_flashcard():
     if request.method == 'POST':
         title = request.form['title']
-        collection = request.form['collection']
+        deck = request.form['deck']
         term = request.form['term']
         definition = request.form['definition']
         if not title:
             flash('Please include title')
             return redirect(url_for('create_flashcard'))
-        if not collection:
-            flash('Please choose a collection')
+        if not deck:
+            flash('Please choose a deck')
             return redirect(url_for('create_flashcard'))
         if not term:
             flash('Term is empty')
@@ -149,13 +175,17 @@ def create_flashcard():
             flash('Definition is empty')
             return redirect(url_for('create_flashcard'))
 
-        flashcard = Flashcard(collection_id=collection, uuid=str(uuid.uuid4()), title=title, term=term,
+        flashcard = Flashcard(deck_id=deck, uuid=str(uuid.uuid4()), title=title, term=term,
                               definition=definition, public=False, edited=datetime.today())
         db_session.add(flashcard)
         db_session.commit()
         flash('Flashcard Saved!')
         return redirect(url_for('root'))
-    return render_template('create_flashcard.html')
+    try:
+        decks = db_session.query(Deck).all()
+    except:
+        decks = None
+    return render_template('create_flashcard.html', decks=decks)
 
 
 if __name__ == "__main__":
