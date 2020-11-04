@@ -3,5 +3,31 @@
     <title>{{ collection.title }}</title>
 {% endblock %}
 {% block content %}
-    <p>{{ collection.title }}</p>
+    <h1>{{ collection.title }}</h1>
+    {% if notes %}
+    <div>
+    <h2>Notes</h2>
+    {% for note in notes %}
+        <div>
+        <h3>{{ note.title }}</h3>
+            <div>{{ note.content|safe }}</div>
+        </div>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% if decks %}
+    <div>
+    <h2>Decks</h2>
+    {% for item in decks %}
+        <h3>{{ item.title }}</h3>
+        <div>
+        {% for flashcard in item.flashcards %}
+        <h4>{{ flashcard.title }}</h4>
+        <div>{{ flashcard.term|safe }}</div>
+        <div>{{ flashcard.definition|safe }}</div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
+    {% endif %}
 {% endblock %}

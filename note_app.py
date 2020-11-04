@@ -36,7 +36,7 @@ def resources_processor():
             .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
             .filter(Collection.user_id == User.id).filter(Note.collection_id == id).all()
 
-        decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id)\
+        decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
             .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
             .filter(Collection.user_id == User.id).filter(Deck.collection_id == id).all()
 
@@ -52,12 +52,87 @@ def root():
     return redirect(url_for('auth.login'))
 
 
+@app.route('/sh/collection/<uuid>/')
+def view_public_collection(uuid):
+    collection = db_session.query(Collection).filter(Collection.public == True)\
+        .filter(Collection.uuid == uuid).first()
+
+    try:
+        notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id)\
+            .filter(Note.public == True).filter(Note.collection_id == collection.id).all()
+    except:
+        notes = None
+
+    try:
+        decks_list = []
+        decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+            .filter(Deck.public == True).filter(Deck.collection_id == collection.id).all()
+
+        for deck in decks:
+            decks_list.append(deck.__dict__)
+
+        for deck in decks_list:
+            flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck['id']).all()
+            flashcards_list = []
+            for flashcard in flashcards:
+                flashcards_list.append(flashcard.__dict__)
+
+            deck['flashcards'] = flashcards_list
+    except:
+        decks_list = None
+
+    return render_template('view_collection.html', collection=collection, notes=notes, decks=decks_list)
+
+
+@app.route('/sh/note/<uuid>/')
+def view_public_note(uuid):
+    note = db_session.query(Note).filter(Note.public == True).filter(Note.uuid == uuid).first()
+    return render_template('view_note.html', note=note)
+
+
+@app.route('/sh/deck/<uuid>/')
+def view_public_deck(uuid):
+    deck = db_session.query(Deck).filter(Deck.public == True).filter(Deck.uuid == uuid).first()
+    try:
+        flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()
+    except:
+        flashcards = None
+    return render_template('view_deck.html', deck=deck, flashcards=flashcards)
+
+
 @app.route('/collection/<uuid>/')
 @requires_login
 def view_collection(uuid):
+
     collection = db_session.query(Collection).join(User, Collection.user_id == User.id) \
         .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
-    return render_template('view_collection.html', collection=collection)
+
+    try:
+        notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Note.collection_id == collection.id).all()
+    except:
+        notes = None
+
+    try:
+        decks_list = []
+        decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Deck.collection_id == collection.id).all()
+
+        for deck in decks:
+            decks_list.append(deck.__dict__)
+
+        for deck in decks_list:
+            flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck['id']).all()
+            flashcards_list = []
+            for flashcard in flashcards:
+                flashcards_list.append(flashcard.__dict__)
+            deck['flashcards'] = flashcards_list
+    except:
+        decks_list = None
+
+    return render_template('view_collection.html', collection=collection, notes=notes, decks=decks_list)
 
 
 @app.route('/note/<uuid>/')
@@ -73,14 +148,13 @@ def view_note(uuid):
 @app.route('/deck/<uuid>/')
 @requires_login
 def view_deck(uuid):
+    deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+        .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
+        .filter(Deck.uuid == uuid).first()
     try:
-        deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
-            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
-            .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
-            .filter(Deck.uuid == uuid).first()
         flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()
     except:
-        deck = None
         flashcards = None
     return render_template('view_deck.html', deck=deck, flashcards=flashcards)
 
@@ -90,6 +164,11 @@ def view_deck(uuid):
 def create_collection():
     if request.method == 'POST':
         try:
+            public_checkbox = request.form.get('public')
+            if public_checkbox:
+                public = True
+            else:
+                public = False
             title = request.form['title']
             if not title:
                 flash('Provide a title')
@@ -101,7 +180,7 @@ def create_collection():
                 return redirect(url_for('create_collection'))
             else:
                 user = db_session.query(User).filter(User.email == session['user']).first()
-                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=False)
+                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=public)
                 db_session.add(collection)
                 db_session.commit()
                 flash(f'Collection {title} created!')
@@ -117,6 +196,12 @@ def create_collection():
 @app.route('/create/note/', methods=['GET', 'POST'])
 def create_note():
     if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
+
         title = request.form['title']
         collection = request.form['collection']
         data = request.form['editordata']
@@ -130,7 +215,7 @@ def create_note():
             flash('Note is empty')
             return redirect(url_for('create_note'))
 
-        note = Note(collection_id=collection, uuid=str(uuid.uuid4()), title=title, content=data, public=False,
+        note = Note(collection_id=collection, uuid=str(uuid.uuid4()), title=title, content=data, public=public,
                     edited=datetime.today())
         db_session.add(note)
         db_session.commit()
@@ -142,6 +227,11 @@ def create_note():
 @app.route('/create/deck/', methods=['GET', 'POST'])
 def create_deck():
     if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
         title = request.form['title']
         collection = request.form['collection']
         if not title:
@@ -151,7 +241,7 @@ def create_deck():
             flash('Please choose a collection')
             return redirect(url_for('create_deck'))
 
-        deck = Deck(collection_id=collection, uuid=str(uuid.uuid4()), title=title, public=False,
+        deck = Deck(collection_id=collection, uuid=str(uuid.uuid4()), title=title, public=public,
                     edited=datetime.today())
         db_session.add(deck)
         db_session.commit()
@@ -180,8 +270,8 @@ def create_flashcard():
             flash('Definition is empty')
             return redirect(url_for('create_flashcard'))
 
-        flashcard = Flashcard(deck_id=deck, uuid=str(uuid.uuid4()), title=title, term=term,
-                              definition=definition, public=False, edited=datetime.today())
+        flashcard = Flashcard(deck_id=deck, uuid=str(uuid.uuid4()), title=title, term=term, definition=definition,
+                              edited=datetime.today())
         db_session.add(flashcard)
         db_session.commit()
         flash('Flashcard Saved!')

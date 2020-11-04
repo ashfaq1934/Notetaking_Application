@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_deck.css') }}">
+{% endblock %}
 {% block title %}
     <title>New Deck</title>
 {% endblock %}
@@ -12,6 +15,10 @@
                 {% endfor %}
             </select>
             <input class="submit" type="submit" value="Save">
+            <label class="switch">
+              <input type="checkbox" name="public">
+              <span class="slider round"></span>
+            </label>
         </form>
         {% else %}
             <p>Please create a collection before creating a deck</p>

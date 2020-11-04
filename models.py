@@ -38,7 +38,6 @@ class Flashcard(Base):
     title = Column(String(200), nullable=False)
     term = Column(Text, nullable=True)
     definition = Column(Text, nullable=True)
-    public = Column(Boolean, nullable=False)
     edited = Column(DateTime, nullable=False)
 
 
