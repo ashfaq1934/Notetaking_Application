@@ -361,7 +361,7 @@ def edit_note(uuid):
         db_session.commit()
         flash('Note Saved!')
         return redirect(url_for('view_note', uuid=note.uuid))
-        
+
     return render_template('create_note.html', edit=edit, note=note)
 
 
@@ -399,6 +399,55 @@ def edit_deck(uuid):
         return redirect(url_for('view_deck', uuid=deck.uuid))
 
     return render_template('create_deck.html', edit=edit, deck=deck)
+
+
+@app.route('/edit/flashcard/<uuid>/', methods=['GET', 'POST'])
+@requires_login
+def edit_flashcard(uuid):
+    flashcard = db_session.query(Flashcard).join(Deck, Flashcard.deck_id == Deck.id)\
+        .join(Collection, Deck.collection_id == Collection.id).join(User, Collection.user_id == User.id)\
+        .filter(User.email == session['user']).filter(Collection.user_id == User.id)\
+        .filter(Deck.collection_id == Collection.id) .filter(Flashcard.uuid == uuid).first()
+
+    edit = True
+
+    try:
+        decks = db_session.query(Deck).all()
+    except:
+        decks = None
+
+    if request.method == 'POST':
+        title = request.form['title']
+        deck = request.form['deck']
+        term = request.form['term']
+        definition = request.form['definition']
+
+        if not title:
+            flash('Please include title')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+        if not deck:
+            flash('Please choose a deck')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+        if not term:
+            flash('Term is empty')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+        if not definition:
+            flash('Definition is empty')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+
+        selected_deck = db_session.query(Deck).filter(Deck.id == deck).first()
+
+        flashcard.title = title
+        flashcard.deck_id = deck
+        flashcard.term = term
+        flashcard.definition = definition
+        flashcard.edited = datetime.today()
+        db_session.commit()
+
+        flash('Flashcard Saved!')
+        return redirect(url_for('view_deck', uuid=selected_deck.uuid))
+
+    return render_template('create_flashcard.html', edit=edit, flashcard=flashcard, decks=decks)
 
 
 if __name__ == "__main__":

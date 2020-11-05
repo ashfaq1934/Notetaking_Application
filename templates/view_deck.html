@@ -12,6 +12,7 @@
         <h3>{{ flashcard.title }}</h3>
         <div>{{ flashcard.term|safe }}</div>
         <div>{{ flashcard.definition|safe }}</div>
+        <a href="{{ url_for('edit_flashcard', uuid=flashcard.uuid) }}">Edit</a>
         </div>
     {% endfor %}
     {% endif %}
