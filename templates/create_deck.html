@@ -3,9 +3,29 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_deck.css') }}">
 {% endblock %}
 {% block title %}
+    {% if edit %}
+    <title>{{ deck.title }}</title>
+    {% else %}
     <title>New Deck</title>
+    {% endif %}
 {% endblock %}
 {% block content %}
+    {% if edit %}
+        <form action="" method="post">
+            <input class="title-input" value="{{ deck.title }}" type="text" name="title" placeholder="Title" />
+            <select name="collection" class="collection-select">
+                {% for collection in collections %}
+                <option value="{{ collection.id }}" {% if collection.id == deck.collection_id %}
+                        selected="selected"{% endif %}>{{ collection.title }}</option>
+                {% endfor %}
+            </select>
+            <input class="submit" type="submit" value="Save">
+            <label class="switch">
+              <input type="checkbox" name="public" {% if deck.public %}checked="checked"{% endif %}>
+              <span class="slider round"></span>
+            </label>
+        </form>
+    {% else %}
     {% if collections %}
         <form action="" method="post">
             <input class="title-input" type="text" name="title" placeholder="Title" />
@@ -23,5 +43,6 @@
         {% else %}
             <p>Please create a collection before creating a deck</p>
             <a class="create-collection" href="{{ url_for('create_collection') }}">Create a collection</a>
+    {% endif %}
     {% endif %}
 {% endblock %}

@@ -6,9 +6,30 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_note.css') }}">
 {% endblock %}
 {% block title %}
+    {% if edit %}
+    <title>{{ note.title }}</title>
+    {% else %}
     <title>New Note</title>
+    {% endif %}
 {% endblock %}
 {% block content %}
+{% if edit %}
+<form action="" method="post">
+    <input class="title-input" type="text" name="title" value="{{ note.title }}" placeholder="Title" />
+    <select name="collection" class="collection-select">
+        {% for collection in collections %}
+        <option value="{{ collection.id }}" {% if collection.id == note.collection_id %}
+                selected="selected" {% endif %}>{{ collection.title }}</option>
+        {% endfor %}
+    </select>
+    <textarea id="summernote" name="editordata"></textarea>
+    <input class="submit" type="submit" value="Save">
+    <label class="switch">
+      <input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}>
+      <span class="slider round"></span>
+    </label>
+</form>
+{% else %}
 {% if collections %}
 <form action="" method="post">
     <input class="title-input" type="text" name="title" placeholder="Title" />
@@ -28,8 +49,27 @@
     <p>Please create a collection before creating a note</p>
     <a class="create-collection" href="{{ url_for('create_collection') }}">Create a collection</a>
 {% endif %}
+{% endif %}
 {% endblock %}
 {% block extra_js %}
+{% if edit %}
+<script>
+    $('#summernote').summernote('code', '{{ note.content|safe }}',
+        {
+        tabsize: 2,
+        height: 120,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture', 'video']],
+        ]}
+        );
+
+</script>
+{% else %}
 {% if collections %}
 <script>
       $('#summernote').summernote({
@@ -44,6 +84,8 @@
           ['insert', ['link', 'picture', 'video']],
         ]
       });
+
     </script>
+{% endif %}
 {% endif %}
 {% endblock %}
