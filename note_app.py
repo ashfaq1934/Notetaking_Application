@@ -180,7 +180,10 @@ def create_collection():
                 return redirect(url_for('create_collection'))
             else:
                 user = db_session.query(User).filter(User.email == session['user']).first()
-                collection = Collection(user_id=user.id, uuid=str(uuid.uuid4()), title=title, public=public)
+
+                collection_uuid = str(uuid.uuid4())
+
+                collection = Collection(user_id=user.id, uuid=collection_uuid, title=title, public=public)
                 db_session.add(collection)
                 db_session.commit()
                 flash(f'Collection {title} created!')
@@ -194,6 +197,7 @@ def create_collection():
 
 
 @app.route('/create/note/', methods=['GET', 'POST'])
+@requires_login
 def create_note():
     if request.method == 'POST':
         public_checkbox = request.form.get('public')
@@ -215,16 +219,19 @@ def create_note():
             flash('Note is empty')
             return redirect(url_for('create_note'))
 
-        note = Note(collection_id=collection, uuid=str(uuid.uuid4()), title=title, content=data, public=public,
+        note_uuid = str(uuid.uuid4())
+
+        note = Note(collection_id=collection, uuid=note_uuid, title=title, content=data, public=public,
                     edited=datetime.today())
         db_session.add(note)
         db_session.commit()
         flash('Note Saved!')
-        return redirect(url_for('root'))
+        return redirect(url_for('view_note', uuid=note_uuid))
     return render_template('create_note.html')
 
 
 @app.route('/create/deck/', methods=['GET', 'POST'])
+@requires_login
 def create_deck():
     if request.method == 'POST':
         public_checkbox = request.form.get('public')
@@ -241,16 +248,19 @@ def create_deck():
             flash('Please choose a collection')
             return redirect(url_for('create_deck'))
 
-        deck = Deck(collection_id=collection, uuid=str(uuid.uuid4()), title=title, public=public,
+        deck_uuid = str(uuid.uuid4())
+
+        deck = Deck(collection_id=collection, uuid=deck_uuid, title=title, public=public,
                     edited=datetime.today())
         db_session.add(deck)
         db_session.commit()
         flash('Deck Saved!')
-        return redirect(url_for('root'))
+        return redirect(url_for('view_deck', uuid=deck_uuid))
     return render_template('create_deck.html')
 
 
 @app.route('/create/flashcard/', methods=['GET', 'POST'])
+@requires_login
 def create_flashcard():
     if request.method == 'POST':
         title = request.form['title']
@@ -274,13 +284,170 @@ def create_flashcard():
                               edited=datetime.today())
         db_session.add(flashcard)
         db_session.commit()
+
+        selected_deck = db_session.query(Deck).filter(Deck.id == deck).first()
+
         flash('Flashcard Saved!')
-        return redirect(url_for('root'))
+        return redirect(url_for('view_deck', uuid=selected_deck.uuid))
     try:
         decks = db_session.query(Deck).all()
     except:
         decks = None
     return render_template('create_flashcard.html', decks=decks)
+
+
+@app.route('/edit/collection/<uuid>/', methods=['GET', 'POST'])
+@requires_login
+def edit_collection(uuid):
+    collection = db_session.query(Collection).join(User, Collection.user_id == User.id) \
+        .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
+
+    edit = True
+    if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
+
+        title = request.form['title']
+
+        if not title:
+            flash('Please include title')
+            return redirect(url_for('edit_collection', uuid=collection.uuid))
+
+        collection.title = title
+        collection.public = public
+        db_session.commit()
+        flash('Collection Saved!')
+        return redirect(url_for('view_collection', uuid=collection.uuid))
+
+    return render_template('create_collection.html', edit=edit, collection=collection)
+
+
+@app.route('/edit/note/<uuid>/', methods=['GET', 'POST'])
+@requires_login
+def edit_note(uuid):
+    note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
+        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+        .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
+        .filter(Note.uuid == uuid).first()
+    edit = True
+    if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
+
+        title = request.form['title']
+        collection = request.form['collection']
+        data = request.form['editordata']
+        if not title:
+            flash('Please include title')
+            return redirect(url_for('edit_note', uuid=note.uuid))
+        if not collection:
+            flash('Please choose a collection')
+            return redirect(url_for('edit_note', uuid=note.uuid))
+        if not data:
+            flash('Note is empty')
+            return redirect(url_for('edit_note', uuid=note.uuid))
+
+        note.title = title
+        note.collection_id = collection
+        note.content = data
+        note.public = public
+        note.edited = datetime.today()
+        db_session.commit()
+        flash('Note Saved!')
+        return redirect(url_for('view_note', uuid=note.uuid))
+
+    return render_template('create_note.html', edit=edit, note=note)
+
+
+@app.route('/edit/deck/<uuid>/', methods=['GET', 'POST'])
+@requires_login
+def edit_deck(uuid):
+    deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+        .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
+        .filter(Deck.uuid == uuid).first()
+    edit = True
+    if request.method == 'POST':
+        public_checkbox = request.form.get('public')
+        if public_checkbox:
+            public = True
+        else:
+            public = False
+
+        title = request.form['title']
+        collection = request.form['collection']
+
+        if not title:
+            flash('Please include title')
+            return redirect(url_for('edit_deck', uuid=deck.uuid))
+        if not collection:
+            flash('Please choose a collection')
+            return redirect(url_for('edit_deck', uuid=deck.uuid))
+
+        deck.title = title
+        deck.collection_id = collection
+        deck.public = public
+        deck.edited = datetime.today()
+        db_session.commit()
+        flash('Deck Saved!')
+        return redirect(url_for('view_deck', uuid=deck.uuid))
+
+    return render_template('create_deck.html', edit=edit, deck=deck)
+
+
+@app.route('/edit/flashcard/<uuid>/', methods=['GET', 'POST'])
+@requires_login
+def edit_flashcard(uuid):
+    flashcard = db_session.query(Flashcard).join(Deck, Flashcard.deck_id == Deck.id)\
+        .join(Collection, Deck.collection_id == Collection.id).join(User, Collection.user_id == User.id)\
+        .filter(User.email == session['user']).filter(Collection.user_id == User.id)\
+        .filter(Deck.collection_id == Collection.id) .filter(Flashcard.uuid == uuid).first()
+
+    edit = True
+
+    try:
+        decks = db_session.query(Deck).all()
+    except:
+        decks = None
+
+    if request.method == 'POST':
+        title = request.form['title']
+        deck = request.form['deck']
+        term = request.form['term']
+        definition = request.form['definition']
+
+        if not title:
+            flash('Please include title')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+        if not deck:
+            flash('Please choose a deck')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+        if not term:
+            flash('Term is empty')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+        if not definition:
+            flash('Definition is empty')
+            return redirect(url_for('edit_flashcard', uuid=flashcard.uuid))
+
+        selected_deck = db_session.query(Deck).filter(Deck.id == deck).first()
+
+        flashcard.title = title
+        flashcard.deck_id = deck
+        flashcard.term = term
+        flashcard.definition = definition
+        flashcard.edited = datetime.today()
+        db_session.commit()
+
+        flash('Flashcard Saved!')
+        return redirect(url_for('view_deck', uuid=selected_deck.uuid))
+
+    return render_template('create_flashcard.html', edit=edit, flashcard=flashcard, decks=decks)
 
 
 if __name__ == "__main__":

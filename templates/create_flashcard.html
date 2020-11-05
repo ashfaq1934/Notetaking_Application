@@ -6,9 +6,38 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_flashcard.css') }}">
 {% endblock %}
 {% block title %}
+{% if edit %}
+    <title>{{ flashcard.title }}</title>
+{% else %}
     <title>New Flashcard</title>
+{% endif %}
 {% endblock %}
 {% block content %}
+{% if edit %}
+    <form action="" method="post">
+            <input class="title-input" type="text" name="title" placeholder="Title" value="{{ flashcard.title }}" />
+            <div class="options-container">
+                <select name="deck" class="deck-select">
+                {% for deck in decks %}
+                <option value="{{ deck.id }}" {% if deck.id == flashcard.deck_id %}
+                selected="selected" {% endif %}>{{ deck.title }}</option>
+                {% endfor %}
+                </select>
+                <a class="create-deck" href="{{ url_for('create_deck') }}">Create a deck</a>
+            </div>
+            <div class="editor-container">
+                <div class="editor">
+                    <textarea class="term" name="term"></textarea>
+                </div>
+                <div class="editor">
+                    <textarea class="definition" name="definition"></textarea>
+                </div>
+            </div>
+            <div class="save-container">
+                <input class="submit" type="submit" value="Save">
+            </div>
+        </form>
+{% else %}
     {% if decks %}
         <form action="" method="post">
             <input class="title-input" type="text" name="title" placeholder="Title" />
@@ -36,8 +65,39 @@
             <p>Please create a deck before creating a flashcard</p>
             <a class="create-deck" href="{{ url_for('create_deck') }}">Create a deck</a>
     {% endif %}
+{% endif %}
 {% endblock %}
 {% block extra_js %}
+{% if edit %}
+<script>
+      $('.term').summernote('code', '{{ flashcard.term|safe }}',
+          {
+          tabsize: 1,
+          placeholder: 'Term',
+          height: 120,
+          toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['insert', ['link', 'picture']],
+          ]
+      });
+      $('.definition').summernote('code', '{{ flashcard.definition|safe }}',
+          {
+          tabsize: 1,
+          placeholder: 'Definition',
+          height: 120,
+          toolbar: [
+              ['style', ['style']],
+              ['font', ['bold', 'underline', 'clear']],
+              ['color', ['color']],
+              ['para', ['ul', 'ol', 'paragraph']],
+              ['insert', ['link', 'picture']],
+          ]
+      });
+</script>
+{% else %}
 {% if decks %}
 <script>
       $('.term').summernote({
@@ -64,6 +124,7 @@
               ['insert', ['link', 'picture']],
           ]
       });
-    </script>
+</script>
+{% endif %}
 {% endif %}
 {% endblock %}
