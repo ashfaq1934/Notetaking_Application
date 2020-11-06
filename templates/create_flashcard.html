@@ -14,7 +14,7 @@
 {% endblock %}
 {% block content %}
 {% if edit %}
-    <form action="" method="post">
+    <form action="" method="post" name="myForm" onsubmit="validateForm()">
             <input class="title-input" type="text" name="title" placeholder="Title" value="{{ flashcard.title }}" />
             <div class="options-container">
                 <select name="deck" class="deck-select">
@@ -39,7 +39,7 @@
         </form>
 {% else %}
     {% if decks %}
-        <form action="" method="post">
+        <form action="" method="post" name="myForm" onsubmit="validateForm()">
             <input class="title-input" type="text" name="title" placeholder="Title" />
             <div class="options-container">
                 <select name="deck" class="deck-select">

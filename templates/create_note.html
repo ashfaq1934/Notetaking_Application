@@ -14,7 +14,7 @@
 {% endblock %}
 {% block content %}
 {% if edit %}
-<form action="" method="post">
+<form name="myForm" action="" method="post" onsubmit="validateForm()">
     <input class="title-input" type="text" name="title" value="{{ note.title }}" placeholder="Title" />
     <select name="collection" class="collection-select">
         {% for collection in collections %}
@@ -31,7 +31,7 @@
 </form>
 {% else %}
 {% if collections %}
-<form action="" method="post">
+<form name="myForm" action="" method="post" onsubmit="validateForm()">
     <input class="title-input" type="text" name="title" placeholder="Title" />
     <select name="collection" class="collection-select">
         {% for collection in collections %}

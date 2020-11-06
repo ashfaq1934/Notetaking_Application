@@ -12,7 +12,7 @@
 {% block content %}
 {% if edit %}
     <h3>Edit Collection</h3>
-    <form action="" method="POST">
+    <form action="" method="POST" name="myForm" onsubmit="validateForm()">
     <input type="text" name="title" value="{{ collection.title }}" />
     <input type="submit" value="Submit" />
     <label class="switch">
@@ -22,7 +22,7 @@
     </form>
 {% else %}
     <h3>Create Collection</h3>
-    <form action="" method="POST">
+    <form action="" method="POST" name="myForm" onsubmit="validateForm()">
     <input type="text" name="title" />
     <input type="submit" value="Submit" />
     <label class="switch">
