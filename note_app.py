@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, flash, session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 from models import User, Collection, Note, Flashcard, Deck
@@ -46,10 +46,17 @@ def resources_processor():
 
 
 @app.route('/', methods=['GET'])
+@requires_login
 def root():
-    if session.get('logged_in'):
-        return render_template('main.html')
-    return redirect(url_for('auth.login'))
+    notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
+        .join(User, Collection.user_id == User.id).filter(User.email == session['user'])\
+        .order_by(desc('edited')).limit(3).all()
+
+    decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+        .order_by(desc('edited')).limit(3).all()
+
+    return render_template('main.html', notes=notes, decks=decks)
 
 
 @app.route('/sh/collection/<uuid>/')
@@ -282,10 +289,11 @@ def create_flashcard():
 
         flashcard = Flashcard(deck_id=deck, uuid=str(uuid.uuid4()), title=title, term=term, definition=definition,
                               edited=datetime.today())
-        db_session.add(flashcard)
-        db_session.commit()
 
         selected_deck = db_session.query(Deck).filter(Deck.id == deck).first()
+        selected_deck.edited = datetime.today()
+        db_session.add(flashcard)
+        db_session.commit()
 
         flash('Flashcard Saved!')
         return redirect(url_for('view_deck', uuid=selected_deck.uuid))
@@ -442,6 +450,7 @@ def edit_flashcard(uuid):
         flashcard.term = term
         flashcard.definition = definition
         flashcard.edited = datetime.today()
+        selected_deck.edited = datetime.today()
         db_session.commit()
 
         flash('Flashcard Saved!')
