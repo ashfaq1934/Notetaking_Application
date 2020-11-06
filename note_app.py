@@ -6,6 +6,8 @@ from models import User, Collection, Note, Flashcard, Deck
 import uuid
 from authentication.auth import authentication, requires_login
 from datetime import datetime
+import bleach
+
 
 app = Flask(__name__, static_folder="static")
 app.secret_key = 'A0Zr98j/3yXR~XHH!jmN]LWX/,?RT'
@@ -14,6 +16,9 @@ engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread
 
 Session = sessionmaker(bind=engine)
 db_session = Session()
+
+allowed_tags = ['div', 'table', 'tr', 'td', 'tbody', 'br', 'p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+attrs = {'*': ['class', 'style'], 'a': ['href', 'rel'], 'img': ['alt'], 'span': ['style']}
 
 
 # Todo: implement input sanitization
@@ -169,7 +174,7 @@ def create_collection():
                 public = True
             else:
                 public = False
-            title = request.form['title']
+            title = bleach.clean(request.form['title'])
             if not title:
                 flash('Provide a title')
                 return redirect(url_for('create_collection'))
@@ -206,9 +211,10 @@ def create_note():
         else:
             public = False
 
-        title = request.form['title']
-        collection = request.form['collection']
-        data = request.form['editordata']
+        title = bleach.clean(request.form['title'])
+        collection = bleach.clean(request.form['collection'])
+        data = bleach.clean(request.form['editordata'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
+                            attributes=attrs, styles=['*'])
         if not title:
             flash('Please include title')
             return redirect(url_for('create_note'))
@@ -239,8 +245,8 @@ def create_deck():
             public = True
         else:
             public = False
-        title = request.form['title']
-        collection = request.form['collection']
+        title = bleach.clean(request.form['title'])
+        collection = bleach.clean(request.form['collection'])
         if not title:
             flash('Please include title')
             return redirect(url_for('create_deck'))
@@ -263,10 +269,12 @@ def create_deck():
 @requires_login
 def create_flashcard():
     if request.method == 'POST':
-        title = request.form['title']
-        deck = request.form['deck']
-        term = request.form['term']
-        definition = request.form['definition']
+        title = bleach.clean(request.form['title'])
+        deck = bleach.clean(request.form['deck'])
+        term = bleach.clean(request.form['term'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
+                            attributes=attrs, styles=['background-colour'])
+        definition = bleach.clean(request.form['definition'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
+                                  attributes=attrs, styles=['background-colour'])
         if not title:
             flash('Please include title')
             return redirect(url_for('create_flashcard'))
@@ -310,7 +318,7 @@ def edit_collection(uuid):
         else:
             public = False
 
-        title = request.form['title']
+        title = bleach.clean(request.form['title'])
 
         if not title:
             flash('Please include title')
@@ -340,9 +348,10 @@ def edit_note(uuid):
         else:
             public = False
 
-        title = request.form['title']
-        collection = request.form['collection']
-        data = request.form['editordata']
+        title = bleach.clean(request.form['title'])
+        collection = bleach.clean(request.form['collection'])
+        data = bleach.clean(request.form['editordata'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
+                            attributes=attrs, styles=['background-colour'])
         if not title:
             flash('Please include title')
             return redirect(url_for('edit_note', uuid=note.uuid))
@@ -380,8 +389,8 @@ def edit_deck(uuid):
         else:
             public = False
 
-        title = request.form['title']
-        collection = request.form['collection']
+        title = bleach.clean(request.form['title'])
+        collection = bleach.clean(request.form['collection'])
 
         if not title:
             flash('Please include title')
@@ -417,10 +426,12 @@ def edit_flashcard(uuid):
         decks = None
 
     if request.method == 'POST':
-        title = request.form['title']
-        deck = request.form['deck']
-        term = request.form['term']
-        definition = request.form['definition']
+        title = bleach.clean(request.form['title'])
+        deck = bleach.clean(request.form['deck'])
+        term = bleach.clean(request.form['term'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
+                            attributes=attrs, styles=['background-colour'])
+        definition = bleach.clean(request.form['definition'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
+                                  attributes=attrs, styles=['background-colour'])
 
         if not title:
             flash('Please include title')
