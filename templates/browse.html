@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Browse</title>
+{% endblock %}
+{% block content %}
+    <h1>Browse Public Resources</h1>
+    <form action="" method="get">
+    <input type="text" name="query"/>
+    <input type="submit" value="Search">
+    </form>
+    {% if searched_notes %}
+    <div>
+    {% for note in searched_notes %}
+        <h4>{{ note.title }}</h4>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% if searched_decks %}
+    <div>
+    {% for deck in searched_decks %}
+        <h4>{{ deck.title }}</h4>
+    {% endfor %}
+    </div>
+    {% endif %}
+    {% if searched_collections %}
+    <div>
+    {% for collection in searched_collections %}
+        <h4>{{ collection.title }}</h4>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <div>
+    <h2>Recently edited notes</h2>
+    {% for note in recent_notes %}
+        <h3>{{ note.title }}</h3>
+    {% endfor %}
+    </div>
+    <div>
+    <h2>Recently edited decks</h2>
+    {% for deck in recent_decks %}
+        <h3>{{ deck.title }}</h3>
+    {% endfor %}
+    </div>
+{% endblock %}
