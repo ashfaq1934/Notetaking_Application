@@ -31,18 +31,18 @@
              <li><a href="{{ url_for('browse') }}">Browse</a></li>
          </ul>
      <div class="wrap">
-       <form action="" class="search" method="get">
-          <input type="text" class="searchTerm" placeholder="What are you looking for?">
+       <form action="{{ url_for('search') }}" class="search" method="get">
+          <input type="text" class="searchTerm" name="query">
           <button type="submit" class="searchButton">
             <i class="fa fa-search"></i>
          </button>
        </form>
-    </div>
          <div class="authentication-link">
              {% if session['logged_in'] %}
              <a href="{{ url_for('auth.logout') }}">Logout</a>
              {% endif %}
          </div>
+    </div>
      </nav>
     <div class="create-bar">
         <ul>

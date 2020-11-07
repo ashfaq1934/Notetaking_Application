@@ -1,6 +1,9 @@
 * {
     box-sizing: border-box;
 }
+form{
+    margin: 0;
+}
 body {
     width: 100%;
     margin: 0;
@@ -35,7 +38,7 @@ nav{
 }
 nav > ul{
     list-style: none;
-    width: 50%;
+    width: 40%;
     float: left;
     margin: 0;
 }
@@ -136,7 +139,7 @@ section{
 }
 
 .searchTerm {
-  width: 100%;
+  width: 70%;
   border: 3px solid #00B4CC;
   border-right: none;
   padding: 3%;
@@ -163,7 +166,7 @@ section{
 
 /*Resize the wrap to see the search bar change!*/
 .wrap{
-    margin-top: 5px;
+    margin-top: 10px;
   width: 30%;
     float: right;
   transform: translate(-50%, -50%);

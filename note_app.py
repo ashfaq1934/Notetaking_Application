@@ -85,6 +85,30 @@ def browse():
                            searched_decks=searched_decks, searched_collections=searched_collections)
 
 
+@app.route('/search/', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    if query:
+        search_query = "%{}%".format(query)
+        searched_notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Note.title.like(search_query)).all()
+
+        searched_decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Deck.title.like(search_query)).all()
+
+        searched_collections = db_session.query(Collection).join(User, Collection.user_id == User.id) \
+            .filter(User.email == session['user']).filter(Collection.title.like(search_query)).all()
+    else:
+        searched_notes = None
+        searched_decks = None
+        searched_collections = None
+
+    return render_template('search_results.html', searched_collections=searched_collections,
+                           searched_notes=searched_notes, searched_decks=searched_decks)
+
+
 @app.route('/sh/collection/<uuid>/')
 def view_public_collection(uuid):
     collection = db_session.query(Collection).filter(Collection.public == True)\
@@ -486,8 +510,6 @@ def edit_flashcard(uuid):
 
         flash('Flashcard Saved!')
         return redirect(url_for('view_deck', uuid=selected_deck.uuid))
-
-    return render_template('create_flashcard.html', edit=edit, flashcard=flashcard, decks=decks)
 
 
 if __name__ == "__main__":
