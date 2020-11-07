@@ -18,7 +18,7 @@ Session = sessionmaker(bind=engine)
 db_session = Session()
 
 allowed_tags = ['div', 'table', 'tr', 'td', 'tbody', 'br', 'p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
-attrs = {'*': ['class', 'style'], 'a': ['href', 'rel'], 'img': ['alt'], 'span': ['style']}
+attrs = {'*': ['*']}
 
 
 # Todo: implement input sanitization
@@ -64,11 +64,31 @@ def root():
     return render_template('main.html', notes=notes, decks=decks)
 
 
+@app.route('/browse/', methods=['GET'])
+def browse():
+    recent_notes = db_session.query(Note).filter(Note.public == True).order_by(desc('edited')).limit(3).all()
+    recent_decks = db_session.query(Deck).filter(Note.public == True).order_by(desc('edited')).limit(3).all()
+    query = request.args.get('query')
+    if query:
+        search = "%{}%".format(query)
+        searched_notes = db_session.query(Note).filter(Note.title.like(search)).all()
+        searched_decks = db_session.query(Deck).filter(Deck.public == True).filter(Deck.title.like(search)).all()
+        searched_collections = db_session.query(Deck).filter(Collection.public == True)\
+            .filter(Collection.title.like(search)).all()
+        print(searched_notes)
+
+    else:
+        searched_notes = None
+        searched_decks = None
+        searched_collections = None
+    return render_template('browse.html', recent_notes=recent_notes, recent_decks=recent_decks, searched_notes=searched_notes,
+                           searched_decks=searched_decks, searched_collections=searched_collections)
+
+
 @app.route('/sh/collection/<uuid>/')
 def view_public_collection(uuid):
     collection = db_session.query(Collection).filter(Collection.public == True)\
         .filter(Collection.uuid == uuid).first()
-
     try:
         notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id)\
             .filter(Note.public == True).filter(Note.collection_id == collection.id).all()

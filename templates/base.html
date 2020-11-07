@@ -28,7 +28,7 @@
      <nav>
          <div class="site-name"><span><a href="{{ url_for('root') }}">Site Name</a></span></div>
          <ul>
-             <li>Browse</li>
+             <li><a href="{{ url_for('browse') }}">Browse</a></li>
          </ul>
          <div class="authentication-link">
              {% if session['logged_in'] %}
