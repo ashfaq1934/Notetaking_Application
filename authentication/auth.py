@@ -5,6 +5,8 @@ import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
+import bleach
+
 
 authentication = Blueprint('auth', __name__, url_prefix='/account/', template_folder='templates')
 engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
@@ -13,25 +15,59 @@ Session = sessionmaker(bind=engine)
 db_session = Session()
 
 
+def requires_login(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        status = session.get('logged_in', False)
+        if not status:
+            return redirect(url_for('auth.login'))
+        return f(*args, **kwargs)
+    return decorated
+
+
+@authentication.route('/', methods=['GET', 'POST'])
+@requires_login
+def account():
+    user = db_session.query(User).filter(User.email == session['user']).first()
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if email:
+            user.email = bleach.clean(email)
+            db_session.commit()
+            session['user'] = bleach.clean(email)
+            flash('Email saved')
+            return redirect(url_for('auth.account'))
+
+        if password:
+            hashed = bcrypt.hashpw(bleach.clean(password).encode('utf-8'), bcrypt.gensalt())
+            user.password = hashed
+            db_session.commit()
+            flash('Password saved')
+            return redirect(url_for('auth.account'))
+
+    return render_template('account.html', user=user)
+
+
 @authentication.route('/register/', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         try:
-            email = request.form['email']
-            password = request.form['password']
+            email = bleach.clean(request.form['email'])
+            password = bleach.clean(request.form['password'])
 
             if not email:
                 flash('Missing email')
-                return redirect(url_for('register'))
+                return redirect(url_for('auth.register'))
             if not password:
                 flash('Missing password')
-                return redirect(url_for('register'))
+                return redirect(url_for('auth.register'))
 
             user = db_session.query(User).filter(User.email == email).count()
 
             if user >= 1:
                 flash('Account  already exists')
-                return redirect(url_for('register'))
+                return redirect(url_for('auth.register'))
             else:
                 hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
                 user = User(email=email, password=hashed)
@@ -41,7 +77,7 @@ def register():
             return redirect(url_for('auth.login'))
         except IntegrityError:
             flash('Provide an Email and Password')
-            return redirect(url_for('register'))
+            return redirect(url_for('auth.register'))
 
     return render_template('register.html')
 
@@ -50,8 +86,8 @@ def register():
 def login():
     if request.method == 'POST':
         try:
-            email = request.form['email']
-            password = request.form['password']
+            email = bleach.clean(request.form['email'])
+            password = bleach.clean(request.form['password'])
 
             if not email:
                 flash('Missing email')
@@ -92,13 +128,3 @@ def check_auth(email, password):
     except:
         flash("User doesn't exist, have you registered?")
         return False
-
-
-def requires_login(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        status = session.get('logged_in', False)
-        if not status:
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-    return decorated
