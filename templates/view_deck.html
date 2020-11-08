@@ -4,7 +4,10 @@
 {% endblock %}
 {% block content %}
     <h1>{{ deck.title }}</h1>
+    {% if view %}
     <a href="{{ url_for('edit_deck', uuid=deck.uuid) }}">Edit</a>
+    <a href="{{ url_for('delete_deck', uuid=deck.uuid) }}">Delete</a>
+    {% endif %}
     <div>
     {% if flashcards %}
     {% for flashcard in flashcards %}
@@ -13,6 +16,7 @@
         <div>{{ flashcard.term|safe }}</div>
         <div>{{ flashcard.definition|safe }}</div>
         <a href="{{ url_for('edit_flashcard', uuid=flashcard.uuid) }}">Edit</a>
+        <a href="{{ url_for('delete_flashcard', uuid=flashcard.uuid) }}">Delete</a>
         </div>
     {% endfor %}
     {% endif %}

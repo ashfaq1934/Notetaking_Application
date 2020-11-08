@@ -4,7 +4,10 @@
 {% endblock %}
 {% block content %}
     <h1>{{ collection.title }}</h1>
+    {% if view %}
     <a href="{{ url_for('edit_collection', uuid=collection.uuid) }}">Edit</a>
+    <a href="{{ url_for('delete_collection', uuid=collection.uuid) }}">Delete</a>
+    {% endif %}
     {% if notes %}
     <div>
     <h2>Notes</h2>
