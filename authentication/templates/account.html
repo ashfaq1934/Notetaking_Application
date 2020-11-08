@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/account.css') }}">
+{% endblock %}
+{% block title %}
+    <title>Account Profile</title>
+{% endblock %}
+{% block content %}
+    <form action="" method="post">
+    <label for="email">Email</label>
+    <input type="text" name="email" value="{{ user.email }}" />
+    <input type="submit" value="Save" />
+    </form>
+    <button id="myBtn">Open Modal</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <form class="modal-content" action="" method="post">
+          <label for="password">Password</label>
+          <input type="password" name="password" />
+          <input type="submit" value="Save"/>
+      </form>
+
+    </div>
+{% endblock %}
+{% block extra_js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/account.js') }}"></script>
+{% endblock %}
