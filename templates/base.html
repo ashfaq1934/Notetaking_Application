@@ -13,43 +13,43 @@
 </head>
 <body>
 <header>
-    <div class="flash-container">
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
+              <div class="flash-container">
+                  <ul class=flashes>
+                      {% for message in messages %}
+                          <li>{{ message }}</li>
+                      {% endfor %}
+                  </ul>
+              </div>
           {% endif %}
         {% endwith %}
-    </div>
 <div class="top-bar">
-     <nav>
-         <div class="site-name"><span><a href="{{ url_for('root') }}">Site Name</a></span></div>
-         <ul>
-             <li><a href="{{ url_for('browse') }}">Browse</a></li>
-         </ul>
-     <div class="wrap">
-       <form action="{{ url_for('search') }}" class="search" method="get">
-          <input type="text" class="searchTerm" name="query">
+    <nav>
+        <span class="site-name">StudyNote</span>
+        <ul>
+            <li><a href="{{ url_for('browse') }}">Browse</a></li>
+        </ul>
+        {% if session['logged_in'] %}
+        <div class="search">
+        <form action="{{ url_for('search') }}" method="get">
+          <input type="text" class="query" name="query">
           <button type="submit" class="searchButton">
             <i class="fa fa-search"></i>
          </button>
-       </form>
-         <div class="authentication-link">
-             {% if session['logged_in'] %}
-             <a href="{{ url_for('auth.logout') }}">Logout</a>
-             <a href="{{ url_for('auth.account') }}">Account</a>
-             {% endif %}
-         </div>
-    </div>
-     </nav>
+        </form>
+        </div>
+        <div class="account">
+            <span><a href="{{ url_for('auth.account') }}">Account</a></span>
+            <span><a href="{{ url_for('auth.logout') }}">Logout</a></span>
+        </div>
+        {% endif %}
+    </nav>
     <div class="create-bar">
         <ul>
-            <li class="create-button"><a href="{{ url_for('create.create_note') }}">New Note</a></li>
-            <li class="create-button"><a href="{{ url_for('create.create_flashcard') }}">New Flashcard</a></li>
-            <li class="create-button"><a href="{{ url_for('create.create_collection') }}">New Collection</a></li>
+            <li><a href="{{ url_for('create.create_note') }}">New Note</a></li>
+            <li><a href="{{ url_for('create.create_flashcard') }}">New Flashcard</a></li>
+            <li><a href="{{ url_for('create.create_collection') }}">New Collection</a></li>
         </ul>
     </div>
 </div>
