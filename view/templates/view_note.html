@@ -5,11 +5,11 @@
 {% block content %}
     <h3>{{ note.title }}</h3>
     {% if view %}
-    <a href="{{ url_for('edit_note', uuid=note.uuid) }}">Edit</a>
-    <a href="{{ url_for('delete_note', uuid=note.uuid) }}">Delete</a>
+    <a href="{{ url_for('edit.edit_note', uuid=note.uuid) }}">Edit</a>
+    <a href="{{ url_for('delete.delete_note', uuid=note.uuid) }}">Delete</a>
     {% endif %}
     {{ note.content|safe }}
     {% if note.public == True %}
-    <a href="{{ url_for('view_public_note', uuid=note.uuid) }}">View public</a>
+    <a href="{{ url_for('public.view_public_note', uuid=note.uuid) }}">View public</a>
     {% endif %}
 {% endblock %}

@@ -47,9 +47,9 @@
      </nav>
     <div class="create-bar">
         <ul>
-            <li class="create-button"><a href="{{ url_for('create_note') }}">New Note</a></li>
-            <li class="create-button"><a href="{{ url_for('create_flashcard') }}">New Flashcard</a></li>
-            <li class="create-button"><a href="{{ url_for('create_collection') }}">New Collection</a></li>
+            <li class="create-button"><a href="{{ url_for('create.create_note') }}">New Note</a></li>
+            <li class="create-button"><a href="{{ url_for('create.create_flashcard') }}">New Flashcard</a></li>
+            <li class="create-button"><a href="{{ url_for('create.create_collection') }}">New Collection</a></li>
         </ul>
     </div>
 </div>
@@ -60,7 +60,7 @@
     <div class="collection_title">Collections</div>
     {% for collection in collections %}
         <div class="collection">
-            <a href="{{ url_for('view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
+            <a href="{{ url_for('view.view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
             {% if get_resources(collection.id)[0] or get_resources(collection.id)[1] %}
                 <button class="accordion"><i class="fa fa-caret-down"></i></button>
             {% endif %}
@@ -68,10 +68,10 @@
             {% if get_resources(collection.id) %}
             <ul>
                 {% for note in get_resources(collection.id)[0] %}
-                    <li><a href="{{ url_for('view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
+                    <li><a href="{{ url_for('view.view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
                 {% endfor %}
                 {% for deck in get_resources(collection.id)[1] %}
-                    <li><a href="{{ url_for('view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a></li>
+                    <li><a href="{{ url_for('view.view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a></li>
                 {% endfor %}
             </ul>
             {% endif %}

@@ -23,7 +23,7 @@
                 selected="selected" {% endif %}>{{ deck.title }}</option>
                 {% endfor %}
                 </select>
-                <a class="create-deck" href="{{ url_for('create_deck') }}">Create a deck</a>
+                <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
             </div>
             <div class="editor-container">
                 <div class="editor">
@@ -47,7 +47,7 @@
                 <option value="{{ deck.id }}">{{ deck.title }}</option>
                 {% endfor %}
                 </select>
-                <a class="create-deck" href="{{ url_for('create_deck') }}">Create a deck</a>
+                <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
             </div>
             <div class="editor-container">
                 <div class="editor">
@@ -63,7 +63,7 @@
         </form>
         {% else %}
             <p>Please create a deck before creating a flashcard</p>
-            <a class="create-deck" href="{{ url_for('create_deck') }}">Create a deck</a>
+            <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
     {% endif %}
 {% endif %}
 {% endblock %}
