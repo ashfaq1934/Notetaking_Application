@@ -6,29 +6,25 @@
     {% if edit %}
     <title>{{ collection.title }}</title>
     {% else %}
-    <title>Create Note</title>
+    <title>Create Collection</title>
     {% endif %}
 {% endblock %}
 {% block content %}
 {% if edit %}
-    <h3>Edit Collection</h3>
     <form action="" method="POST" name="myForm" onsubmit="validateForm()">
-    <input type="text" name="title" value="{{ collection.title }}" />
-    <input type="submit" value="Submit" />
-    <label class="switch">
-        <input type="checkbox" name="public" {% if collection.public %}checked="checked"{% endif %}>
-        <span class="slider round"></span>
-    </label>
+    <input class="title-input" type="text" name="title" value="{{ collection.title }}" />
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch"><input type="checkbox" name="public" {% if collection.public %}checked="checked"{% endif %}><div class="slider round"></div></label>
+    </div>
     </form>
 {% else %}
-    <h3>Create Collection</h3>
     <form action="" method="POST" name="myForm" onsubmit="validateForm()">
-    <input type="text" name="title" />
-    <input type="submit" value="Submit" />
-    <label class="switch">
-        <input type="checkbox" name="public">
-        <span class="slider round"></span>
-    </label>
+    <input class="title-input" type="text" name="title" placeholder="New Collection" />
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch"><input type="checkbox" name="public"><div class="slider round"></div></label>
+    </div>
     </form>
 {% endif %}
 {% endblock %}

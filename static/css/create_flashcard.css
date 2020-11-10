@@ -18,7 +18,15 @@
   padding: 2%;
 }
 .submit{
-  margin-top: 1%;
+  padding-left: 1%;
+  padding-right: 1%;
+  padding-bottom: 0.5%;
+  padding-top: 0.5%;
+  font-size: medium;
+  background-color: #2BA3E2;
+  color: #fff;
+  border-radius: 5px;
+  border: 0;
 }
 .create-deck{
   background-color: #0E6BA8;
@@ -36,6 +44,7 @@
   float: left;
 }
 .save-container{
+  margin-top: 3%;
   width: 100%;
   float: left;
 }

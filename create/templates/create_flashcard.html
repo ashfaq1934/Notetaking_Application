@@ -23,7 +23,7 @@
                 selected="selected" {% endif %}>{{ deck.title }}</option>
                 {% endfor %}
                 </select>
-                <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
+                <a class="create-deck" href="{{ url_for('create.create_deck') }}">New deck</a>
             </div>
             <div class="editor-container">
                 <div class="editor">
@@ -40,14 +40,14 @@
 {% else %}
     {% if decks %}
         <form action="" method="post" name="myForm" onsubmit="validateForm()">
-            <input class="title-input" type="text" name="title" placeholder="Title" />
+            <input class="title-input" type="text" name="title" placeholder="New Flashcard" />
             <div class="options-container">
                 <select name="deck" class="deck-select">
                 {% for deck in decks %}
                 <option value="{{ deck.id }}">{{ deck.title }}</option>
                 {% endfor %}
                 </select>
-                <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
+                <a class="create-deck" href="{{ url_for('create.create_deck') }}">New deck</a>
             </div>
             <div class="editor-container">
                 <div class="editor">

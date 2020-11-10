@@ -2,11 +2,21 @@
 {% block title %}
     <title>Register</title>
 {% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/form.css') }}">
+{% endblock %}
 {% block content %}
-    <h3>Register Account</h3>
-    <form method="POST" action="">
-        <input type="email" name="email" placeholder="Email">
-        <input type="password" name="password" placeholder="Password">
-        <input type="submit" value="Register">
+    <form class="myForm" method="POST" action="">
+        <div class="form-container">
+            <h1>Register</h1>
+            <label for="email">Email</label>
+            <input type="text" name="email">
+
+        <label for="password">Password</label>
+        <input type="password" name="password">
+
+        <button type="submit">Submit</button>
+          <p>Already have an account? Login <a href="{{ url_for('auth.login') }}">here</a></p>
+      </div>
     </form>
 {% endblock %}

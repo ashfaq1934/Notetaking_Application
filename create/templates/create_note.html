@@ -25,16 +25,13 @@
     <textarea id="summernote" name="editordata"></textarea>
     <div class="buttons-container">
         <input class="save" type="submit" value="Save">
-        <label class="switch">
-          <input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}>
-          <span class="slider round"></span>
-        </label>
+        <label class="switch"><input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}><div class="slider round"></div></label>
     </div>
 </form>
 {% else %}
 {% if collections %}
 <form name="myForm" action="" method="post" onsubmit="validateForm()">
-    <input class="title-input" type="text" name="title" placeholder="Title" />
+    <input class="title-input" type="text" name="title" placeholder="New Note" />
     <select name="collection" class="collection-select">
         {% for collection in collections %}
         <option value="{{ collection.id }}">{{ collection.title }}</option>
@@ -43,10 +40,7 @@
     <textarea id="summernote" name="editordata"></textarea>
     <div class="buttons-container">
         <input class="save" type="submit" value="Save">
-        <label class="switch">
-          <input type="checkbox" name="public">
-          <span class="slider round"></span>
-        </label>
+        <label class="switch"><input type="checkbox" name="public"><div class="slider round"></div></label>
     </div>
 </form>
 {% else %}

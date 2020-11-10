@@ -8,6 +8,7 @@ nav{
     justify-content: space-between;
     background-color: #FFC05C;
     display: flex;
+    border-bottom: 1px solid black;
 }
 nav > ul{
     display: flex;
@@ -19,6 +20,7 @@ nav > ul > li{
     padding: 0.5%;
     display: block;
     align-self: center;
+    margin-right: 5%;
 }
 nav > ul > li > a{
     color: #000;
@@ -34,12 +36,14 @@ nav > ul > li > a{
 }
 .account{
     display: flex;
-    flex-grow: 1;
+    flex-grow: 3;
     padding: 1%;
     font-size: 20px;
 }
 .account > span{
     padding: 5%;
+    margin-right: 5%;
+    width: 100%;
 }
 .account > span > a{
     color: #000;
