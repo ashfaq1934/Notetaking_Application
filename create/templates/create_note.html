@@ -23,11 +23,13 @@
         {% endfor %}
     </select>
     <textarea id="summernote" name="editordata"></textarea>
-    <input class="submit" type="submit" value="Save">
-    <label class="switch">
-      <input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}>
-      <span class="slider round"></span>
-    </label>
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch">
+          <input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}>
+          <span class="slider round"></span>
+        </label>
+    </div>
 </form>
 {% else %}
 {% if collections %}
@@ -39,11 +41,13 @@
         {% endfor %}
     </select>
     <textarea id="summernote" name="editordata"></textarea>
-    <input class="submit" type="submit" value="Save">
-    <label class="switch">
-      <input type="checkbox" name="public">
-      <span class="slider round"></span>
-    </label>
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch">
+          <input type="checkbox" name="public">
+          <span class="slider round"></span>
+        </label>
+    </div>
 </form>
 {% else %}
     <p>Please create a collection before creating a note</p>

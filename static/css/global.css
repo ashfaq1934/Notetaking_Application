@@ -9,6 +9,20 @@ nav{
     background-color: #FFC05C;
     display: flex;
 }
+nav > ul{
+    display: flex;
+    list-style: none;
+    flex-grow: 15;
+    font-size: 20px;
+}
+nav > ul > li{
+    padding: 0.5%;
+    display: block;
+    align-self: center;
+}
+nav > ul > li > a{
+    color: #000;
+}
 .top-bar{
     flex-grow: 1;
 }
@@ -27,12 +41,8 @@ nav{
 .account > span{
     padding: 5%;
 }
-
-nav > ul{
-    display: flex;
-    list-style: none;
-    flex-grow: 15;
-    font-size: 20px;
+.account > span > a{
+    color: #000;
 }
 .search{
     display: flex;
@@ -46,11 +56,13 @@ nav > ul{
 }
 .search > form > .query{
     width: 50%;
+    padding: 1%;
+    border: none;
 }
-nav > ul > li{
-    padding: 0.5%;
-    display: block;
-    align-self: center;
+.searchButton{
+    border: none;
+    padding: 1%;
+    background-color: white;
 }
 .create-bar{
     background-color: white;
@@ -76,6 +88,9 @@ nav > ul > li{
     margin-bottom: 0.5%;
     float: left;
 }
+.create-bar > ul > li > a{
+    color: #fff;
+}
 .flash-container{
     background-color: #c7edcb;
     animation: cssAnimation 0s 5s forwards;
@@ -97,13 +112,11 @@ section{
 }
 aside{
     width: 15%;
-    background-color: #a16e54;
-    padding: 1%;
     margin-top: 1%;
 }
-/*aside > div{*/
-/*    font-size: 20px;*/
-/*}*/
+.collections_panel{
+    background-color: #946332;
+}
 main{
     flex-grow: 1;
 }
@@ -112,84 +125,40 @@ main{
     padding: 1%;
 }
 .accordion {
-    color: #444;
-    background-color: #a16e54;
+    background-color: #946332;
     cursor: pointer;
-    padding-bottom: 10px;
-    margin-right: 30%;
-    width: 10%;
-    border: none;
+    padding: 18px;
     text-align: left;
-    outline: none;
-    font-size: 15px;
     transition: 0.4s;
+    border-bottom: 1px solid black;
 }
 .active, .accordion:hover {
-
+  background-color: #B59463;
+}
+.accordion-dropdown {
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
 }
 .panel {
   padding: 0 18px;
+  background-color: #B59463;
   max-height: 0;
   overflow: hidden;
-    float: left;
   transition: max-height 0.2s ease-out;
 }
 .panel > ul{
     list-style: none;
 }
-
-.collection{
-    width: 100%;
-    float: left;
+.panel > ul > li > a{
+    color: black;
 }
 .collection_link{
-    float: left;
-    color: #fff;
+    color: whitesmoke;
     text-decoration: none;
 }
 .collection_title{
-    margin-bottom: 5%;
     padding: 5%;
     font-size: x-large;
     border-bottom: 1px solid black;
 }
-
-/*.search {*/
-/*  width: 80%;*/
-/*  position: relative;*/
-/*  display: flex;*/
-/*}*/
-
-/*.searchTerm {*/
-/*  width: 70%;*/
-/*  border: 3px solid #00B4CC;*/
-/*  border-right: none;*/
-/*  padding: 3%;*/
-/*  height: 20px;*/
-/*  border-radius: 5px 0 0 5px;*/
-/*  outline: none;*/
-/*  color: #9DBFAF;*/
-/*}*/
-
-/*.searchTerm:focus{*/
-/*  color: #00B4CC;*/
-/*}*/
-
-/*.searchButton {*/
-/*  padding: 1.5%;*/
-/*  border: 1px solid #00B4CC;*/
-/*  background: #00B4CC;*/
-/*  text-align: center;*/
-/*  color: #fff;*/
-/*  border-radius: 0 5px 5px 0;*/
-/*  cursor: pointer;*/
-/*  font-size: 15px;*/
-/*}*/
-
-/*!*Resize the wrap to see the search bar change!*!*/
-/*.wrap{*/
-/*    margin-top: 10px;*/
-/*  width: 30%;*/
-/*    float: right;*/
-/*  transform: translate(-50%, -50%);*/
-/*}*/
