@@ -1,13 +1,26 @@
 {% extends "base.html" %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/view/view_deck.css') }}">
+{% endblock %}
 {% block title %}
     <title>{{ deck.title }}</title>
 {% endblock %}
 {% block content %}
-    <h1>{{ deck.title }}</h1>
-    {% if view %}
-    <a href="{{ url_for('edit.edit_deck', uuid=deck.uuid) }}">Edit</a>
-    <a href="{{ url_for('delete.delete_deck', uuid=deck.uuid) }}">Delete</a>
+    <div class="top-section">
+        {% if view %}
+            <span class="collection"><i class="fas fa-folder-open"></i> {{ deck_collection.title }}</span>
+        <div class="options">
+            <a href="{{ url_for('edit.edit_deck', uuid=deck.uuid) }}" title="Edit">Edit <i class="fas fa-edit"></i></a>
+            <a href="{{ url_for('delete.delete_deck', uuid=deck.uuid) }}" title="Delete"><i class="fas fa-trash-alt"></i></a>
+            {% if deck.public == True %}
+            <a href="{{ url_for('public.view_public_deck', uuid=deck.uuid) }}">View public</a>
+            {% endif %}
+        </div>
     {% endif %}
+    <span class="date">Last edited: {{ deck.edited.strftime('%B %d, %Y') }}</span>
+    </div>
+    <h1 class="title">{{ deck.title }}</h1>
+    <div class="deck-content">
     <div>
     {% if flashcards %}
     {% for flashcard in flashcards %}
@@ -19,9 +32,10 @@
         <a href="{{ url_for('delete.delete_flashcard', uuid=flashcard.uuid) }}">Delete</a>
         </div>
     {% endfor %}
+    {% else %}
+        <p>No flashcards.</p>
+        <a class="create-flashcard" href="{{ url_for('create.create_flashcard') }}">Create a flashcard</a>
     {% endif %}
     </div>
-    {% if deck.public == True %}
-    <a href="{{ url_for('public.view_public_deck', uuid=deck.uuid) }}">View public</a>
-    {% endif %}
+    </div>
 {% endblock %}
