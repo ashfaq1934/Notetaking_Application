@@ -21,21 +21,50 @@
     </div>
     <h1 class="title">{{ deck.title }}</h1>
     <div class="deck-content">
-    <div>
     {% if flashcards %}
     {% for flashcard in flashcards %}
-        <div>
-        <h3>{{ flashcard.title }}</h3>
-        <div>{{ flashcard.term|safe }}</div>
-        <div>{{ flashcard.definition|safe }}</div>
-        <a href="{{ url_for('edit.edit_flashcard', uuid=flashcard.uuid) }}">Edit</a>
-        <a href="{{ url_for('delete.delete_flashcard', uuid=flashcard.uuid) }}">Delete</a>
-        </div>
+        <div class="card">
+            <div class="card__inner">
+                <div class="card__face card__face--front">
+                    <div class="card-title-section">
+                        <span>{{ flashcard.title }}</span>
+                        <span class="flashcards-options">
+                            <a href="{{ url_for('edit.edit_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url_for('delete.delete_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-trash-alt"></i></a>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div>{{ flashcard.term|safe }}</div>
+                    </div>
+                </div>
+                <div class="card__face card__face--back">
+                    <div class="card-title-section">
+                        <span>{{ flashcard.title }}</span>
+                        <span class="flashcards-options">
+                            <a href="{{ url_for('edit.edit_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url_for('delete.delete_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-trash-alt"></i></a>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div>{{ flashcard.definition|safe }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>`
     {% endfor %}
     {% else %}
-        <p>No flashcards.</p>
         <a class="create-flashcard" href="{{ url_for('create.create_flashcard') }}">Create a flashcard</a>
     {% endif %}
     </div>
-    </div>
+{% endblock %}
+{% block extra_js %}
+    <script>
+        const cards = document.querySelectorAll(".card__inner");
+
+        cards.forEach(card => {
+            card.addEventListener("click", function (e) {
+                card.classList.toggle('is-flipped');
+            });
+        });
+    </script>
 {% endblock %}
