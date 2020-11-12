@@ -39,7 +39,7 @@
     border-radius: 500px;
 }
 .card {
-    width: 250px;
+    flex-basis: 15%;
     height: 150px;
     margin: 2%;
 }
