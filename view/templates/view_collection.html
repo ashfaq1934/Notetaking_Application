@@ -2,39 +2,48 @@
 {% block title %}
     <title>{{ collection.title }}</title>
 {% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/view/view_collection.css') }}">
+{% endblock %}
 {% block content %}
+    <div class="top-section">
     <h1>{{ collection.title }}</h1>
     {% if view %}
-    <a href="{{ url_for('edit.edit_collection', uuid=collection.uuid) }}">Edit</a>
-    <a href="{{ url_for('delete.delete_collection', uuid=collection.uuid) }}">Delete</a>
+        <div class="options">
+        <a href="{{ url_for('edit.edit_collection', uuid=collection.uuid) }}" title="Edit">Edit <i class="fas fa-edit"></i></a>
+        <a href="{{ url_for('delete.delete_collection', uuid=collection.uuid) }}" title="Delete"><i class="fas fa-trash-alt"></i></a>
+        {% if collection.public == True %}
+        <a href="{{ url_for('public.view_public_collection', uuid=collection.uuid) }}">View public</a>
+        {% endif %}
+        </div>
     {% endif %}
+    </div>
     {% if notes %}
-    <div>
     <h2>Notes</h2>
+    <div class="notes">
     {% for note in notes %}
-        <div>
-        <h3>{{ note.title }}</h3>
-            <div>{{ note.content|safe }}</div>
+        <div class="note">
+            <h3>{{ note.title }}</h3>
+            <div class="note-content">{{ note.content[:100]|safe }}{% if note.content|length > 100 %}...{% endif %}</div>
         </div>
     {% endfor %}
     </div>
     {% endif %}
     {% if decks %}
-    <div>
     <h2>Decks</h2>
-    {% for item in decks %}
-        <h3>{{ item.title }}</h3>
-        <div>
-        {% for flashcard in item.flashcards %}
+    <div class="decks">
+    {% for deck in decks %}
+        <h3>{{ deck.title }}</h3>
+        <div class="deck">
+        {% for flashcard in deck.flashcards %}
+        <div class="flashcard">
         <h4>{{ flashcard.title }}</h4>
         <div>{{ flashcard.term|safe }}</div>
         <div>{{ flashcard.definition|safe }}</div>
+        </div>
         {% endfor %}
         </div>
     {% endfor %}
     </div>
-    {% endif %}
-    {% if collection.public == True %}
-    <a href="{{ url_for('public.view_public_collection', uuid=collection.uuid) }}">View public</a>
     {% endif %}
 {% endblock %}

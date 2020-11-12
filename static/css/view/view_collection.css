@@ -1,0 +1,35 @@
+.top-section{
+    display: flex;
+    border-bottom: 1px solid rgba(122, 128, 131, 0.6);
+}
+.top-section > h1{
+    margin-right: 3%;
+}
+.options{
+    flex: 1;
+    align-self: center;
+    color: rgb(122, 128, 131);
+}
+.options > *{
+    color: black;
+    margin-right: 1%;
+}
+.notes{
+    display: flex;
+}
+.note{
+    flex-basis: 20%;
+    margin-right: 10%;
+    padding: 1%;
+    box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
+}
+.note > h3{
+    border-bottom: 1px solid black;
+    padding: 2%;
+}
+.decks > .deck{
+    display: flex;
+}
+.flashcard > *{
+    display: flex;
+}
