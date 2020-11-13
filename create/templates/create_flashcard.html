@@ -3,7 +3,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_flashcard.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create/create_flashcard.css') }}">
 {% endblock %}
 {% block title %}
 {% if edit %}
@@ -23,7 +23,7 @@
                 selected="selected" {% endif %}>{{ deck.title }}</option>
                 {% endfor %}
                 </select>
-                <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
+                <a class="create-deck" href="{{ url_for('create.create_deck') }}">New deck</a>
             </div>
             <div class="editor-container">
                 <div class="editor">
@@ -40,14 +40,14 @@
 {% else %}
     {% if decks %}
         <form action="" method="post" name="myForm" onsubmit="validateForm()">
-            <input class="title-input" type="text" name="title" placeholder="Title" />
+            <input class="title-input" type="text" name="title" placeholder="New Flashcard" />
             <div class="options-container">
                 <select name="deck" class="deck-select">
                 {% for deck in decks %}
                 <option value="{{ deck.id }}">{{ deck.title }}</option>
                 {% endfor %}
                 </select>
-                <a class="create-deck" href="{{ url_for('create.create_deck') }}">Create a deck</a>
+                <a class="create-deck" href="{{ url_for('create.create_deck') }}">New deck</a>
             </div>
             <div class="editor-container">
                 <div class="editor">

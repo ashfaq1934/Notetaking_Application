@@ -1,0 +1,23 @@
+  .myForm {
+      display: flex;
+      border-radius: 3px;
+      padding: 5%;
+  }
+  .form-container {
+      flex: 1;
+  }
+  .form-container input {
+      width: 60%;
+      display: flex;
+  }
+  .form-container input,
+  .form-container button {
+      padding: 1em;
+      margin-bottom: 1em;
+  }
+  .form-container button {
+      background: gray;
+      color: white;
+      border: 0;
+  }
+

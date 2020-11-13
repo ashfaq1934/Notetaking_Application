@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, url_for, flash, session
+from flask import Blueprint, render_template, session
 from models import User, Collection, Note, Flashcard, Deck
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -58,9 +58,11 @@ def view_note(uuid):
         .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
         .filter(Note.uuid == uuid).first()
 
+    note_collection = db_session.query(Collection).filter(Collection.id == note.collection_id).first()
+
     view = True
 
-    return render_template('view_note.html', note=note, view=view)
+    return render_template('view_note.html', note=note, view=view, note_collection=note_collection)
 
 
 @view.route('/deck/<uuid>/')
@@ -71,6 +73,8 @@ def view_deck(uuid):
         .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
         .filter(Deck.uuid == uuid).first()
 
+    deck_collection = db_session.query(Collection).filter(Collection.id == deck.collection_id).first()
+
     view = True
 
     try:
@@ -78,4 +82,5 @@ def view_deck(uuid):
     except:
         flashcards = None
 
-    return render_template('view_deck.html', deck=deck, flashcards=flashcards, view=view)
+    return render_template('view_deck.html', deck=deck, flashcards=flashcards, view=view,
+                           deck_collection=deck_collection)

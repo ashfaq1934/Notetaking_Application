@@ -3,7 +3,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_note.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create/create_note.css') }}">
 {% endblock %}
 {% block title %}
     {% if edit %}
@@ -23,27 +23,25 @@
         {% endfor %}
     </select>
     <textarea id="summernote" name="editordata"></textarea>
-    <input class="submit" type="submit" value="Save">
-    <label class="switch">
-      <input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}>
-      <span class="slider round"></span>
-    </label>
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch"><input type="checkbox" name="public" {% if note.public %}checked="checked"{% endif %}><div class="slider round"></div></label>
+    </div>
 </form>
 {% else %}
 {% if collections %}
 <form name="myForm" action="" method="post" onsubmit="validateForm()">
-    <input class="title-input" type="text" name="title" placeholder="Title" />
+    <input class="title-input" type="text" name="title" placeholder="New Note" />
     <select name="collection" class="collection-select">
         {% for collection in collections %}
         <option value="{{ collection.id }}">{{ collection.title }}</option>
         {% endfor %}
     </select>
     <textarea id="summernote" name="editordata"></textarea>
-    <input class="submit" type="submit" value="Save">
-    <label class="switch">
-      <input type="checkbox" name="public">
-      <span class="slider round"></span>
-    </label>
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch"><input type="checkbox" name="public"><div class="slider round"></div></label>
+    </div>
 </form>
 {% else %}
     <p>Please create a collection before creating a note</p>

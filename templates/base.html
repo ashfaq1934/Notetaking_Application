@@ -13,43 +13,41 @@
 </head>
 <body>
 <header>
-    <div class="flash-container">
         {% with messages = get_flashed_messages() %}
           {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
+              <div class="flash-container">
+                  <ul class=flashes>
+                      {% for message in messages %}
+                          <li>{{ message }}</li>
+                      {% endfor %}
+                  </ul>
+              </div>
           {% endif %}
         {% endwith %}
-    </div>
 <div class="top-bar">
-     <nav>
-         <div class="site-name"><span><a href="{{ url_for('root') }}">Site Name</a></span></div>
-         <ul>
-             <li><a href="{{ url_for('browse') }}">Browse</a></li>
-         </ul>
-     <div class="wrap">
-       <form action="{{ url_for('search') }}" class="search" method="get">
-          <input type="text" class="searchTerm" name="query">
-          <button type="submit" class="searchButton">
-            <i class="fa fa-search"></i>
-         </button>
-       </form>
-         <div class="authentication-link">
-             {% if session['logged_in'] %}
-             <a href="{{ url_for('auth.logout') }}">Logout</a>
-             <a href="{{ url_for('auth.account') }}">Account</a>
-             {% endif %}
-         </div>
-    </div>
-     </nav>
+    <nav>
+        <span class="site-name">StudyNote</span>
+        <ul>
+            <li><a href="{{ url_for('root') }}">Home</a></li>
+            <li><a href="{{ url_for('browse') }}">Browse</a></li>
+        </ul>
+        {% if session['logged_in'] %}
+        <div class="search">
+        <form action="{{ url_for('search') }}" method="get">
+          <input type="text" class="query" name="query"><button type="submit" class="searchButton"><i class="fa fa-search"></i></button>
+        </form>
+        </div>
+        <div class="account">
+            <span><a href="{{ url_for('auth.account') }}">Account <i class="fas fa-user"></i></a></span>
+            <span><a href="{{ url_for('auth.logout') }}">Logout <i class="fas fa-sign-out-alt"></i></a></span>
+        </div>
+        {% endif %}
+    </nav>
     <div class="create-bar">
         <ul>
-            <li class="create-button"><a href="{{ url_for('create.create_note') }}">New Note</a></li>
-            <li class="create-button"><a href="{{ url_for('create.create_flashcard') }}">New Flashcard</a></li>
-            <li class="create-button"><a href="{{ url_for('create.create_collection') }}">New Collection</a></li>
+            <li><a href="{{ url_for('create.create_note') }}">New Note</a></li>
+            <li><a href="{{ url_for('create.create_flashcard') }}">New Flashcard</a></li>
+            <li><a href="{{ url_for('create.create_collection') }}">New Collection</a></li>
         </ul>
     </div>
 </div>
@@ -57,27 +55,29 @@
 <section>
 {% if collections %}
 <aside>
+<div class="collections_panel">
     <div class="collection_title">Collections</div>
     {% for collection in collections %}
-        <div class="collection">
-            <a href="{{ url_for('view.view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
-            {% if get_resources(collection.id)[0] or get_resources(collection.id)[1] %}
-                <button class="accordion"><i class="fa fa-caret-down"></i></button>
-            {% endif %}
-            <div class="panel">
-            {% if get_resources(collection.id) %}
-            <ul>
-                {% for note in get_resources(collection.id)[0] %}
-                    <li><a href="{{ url_for('view.view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
-                {% endfor %}
-                {% for deck in get_resources(collection.id)[1] %}
-                    <li><a href="{{ url_for('view.view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a></li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            </div>
-        </div>
+    <div class="accordion">
+        <a href="{{ url_for('view.view_collection', uuid=collection.uuid) }}" class="collection_link">{{ collection.title }}</a>
+        {% if get_resources(collection.id)[0] or get_resources(collection.id)[1] %}
+        <span class="accordion-dropdown"><i class="fa fa-caret-down"></i></span>
+        {% endif %}
+    </div>
+        {% if get_resources(collection.id) %}
+    <div class="panel">
+        <ul>
+            {% for note in get_resources(collection.id)[0] %}
+                <li><a href="{{ url_for('view.view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
+            {% endfor %}
+            {% for deck in get_resources(collection.id)[1] %}
+                <li><a href="{{ url_for('view.view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+        {% endif %}
     {% endfor %}
+</div>
 </aside>
 {% endif %}
 <main>
