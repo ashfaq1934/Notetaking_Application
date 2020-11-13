@@ -6,23 +6,23 @@
     <title>Account Profile</title>
 {% endblock %}
 {% block content %}
-    <form action="" method="post">
-    <label for="email">Email</label>
-    <input type="text" name="email" value="{{ user.email }}" />
-    <input type="submit" value="Save" />
-    </form>
-    <button id="myBtn">Open Modal</button>
+    <h1>Account Details</h1>
+    <div class="email-section">
+        <form action="" method="post">
+            <label for="email">Email</label>
+            <input type="text" name="email" value="{{ user.email }}" />
+            <input class="submit" type="submit" value="Save" />
+        </form>
+    </div>
+    <button id="myBtn">Change Password</button>
 
-    <!-- The Modal -->
     <div id="myModal" class="modal">
-
-      <!-- Modal content -->
       <form class="modal-content" action="" method="post">
           <label for="password">Password</label>
-          <input type="password" name="password" />
-          <input type="submit" value="Save"/>
+          <input type="password" name="password"/>
+          <input class="submit" type="submit" value="Save"/>
+           <span class="close">&times;</span>
       </form>
-
     </div>
 {% endblock %}
 {% block extra_js %}
