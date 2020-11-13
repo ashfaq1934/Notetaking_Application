@@ -14,8 +14,16 @@ engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread
 Session = sessionmaker(bind=engine)
 db_session = Session()
 
-allowed_tags = ['div', 'table', 'tr', 'td', 'tbody', 'br', 'p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
-attrs = {'*': ['*']}
+allowed_tags = ['a', 'abbr', 'acronym', 'address', 'b', 'br', 'div', 'dl', 'dt',
+                'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img',
+                'li', 'ol', 'p', 'pre', 'q', 's', 'small', 'strike', 'strong',
+                'span', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th',
+                'thead', 'tr', 'tt', 'u', 'ul']
+
+allowed_attrs = {
+    'a': ['href', 'target', 'title'],
+    'img': ['src', 'alt', 'width', 'height'],
+}
 
 
 @edit.route('/collection/<uuid>/', methods=['GET', 'POST'])

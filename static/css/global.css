@@ -125,8 +125,8 @@ main{
     flex-grow: 1;
 }
 .content{
-    margin-left: 2%;
     padding: 1%;
+    margin-left: 2% ;
 }
 .accordion {
     background-color: #946332;

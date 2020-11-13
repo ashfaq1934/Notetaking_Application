@@ -46,8 +46,21 @@
 .decks > .deck{
     display: flex;
 }
-.decks > h3{
+.deck-title{
+    display: flex;
+}
+.deck-title > a{
+    color: black;
+}
+.deck-title > a > h3{
     font-size: 20px;
+}
+.deck-options{
+    align-self: center;
+    margin-left: 2%;
+}
+.deck-options > a{
+    color: black;
 }
 .card {
     flex-basis: 15%;
