@@ -53,14 +53,17 @@ def view_collection(uuid):
 @view.route('/note/<uuid>/')
 @requires_login
 def view_note(uuid):
-    note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
-        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
-        .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
-        .filter(Note.uuid == uuid).first()
-
-    note_collection = db_session.query(Collection).filter(Collection.id == note.collection_id).first()
-
-    view = True
+    try:
+        note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
+            .filter(Note.uuid == uuid).first()
+        note_collection = db_session.query(Collection).filter(Collection.id == note.collection_id).first()
+        view = True
+    except:
+        note = None
+        note_collection = None
+        view = None
 
     return render_template('view_note.html', note=note, view=view, note_collection=note_collection)
 
@@ -68,18 +71,22 @@ def view_note(uuid):
 @view.route('/deck/<uuid>/')
 @requires_login
 def view_deck(uuid):
-    deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
-        .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
-        .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
-        .filter(Deck.uuid == uuid).first()
-
-    deck_collection = db_session.query(Collection).filter(Collection.id == deck.collection_id).first()
-
-    view = True
-
     try:
-        flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()
+        deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
+            .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
+            .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
+            .filter(Deck.uuid == uuid).first()
+        deck_collection = db_session.query(Collection).filter(Collection.id == deck.collection_id).first()
+        view = True
+
+        try:
+            flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()
+        except:
+            flashcards = None
     except:
+        deck = None
+        deck_collection = None
+        view = None
         flashcards = None
 
     return render_template('view_deck.html', deck=deck, flashcards=flashcards, view=view,

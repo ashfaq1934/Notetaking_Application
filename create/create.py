@@ -24,7 +24,7 @@ allowed_tags = ['a', 'abbr', 'acronym', 'blockquote', 'address', 'b', 'br', 'div
 allowed_styles = [
     'color', 'background-color', 'font', 'font-weight',
     'height', 'max-height', 'min-height',
-    'width', 'max-width', 'min-width', ]
+    'width', 'max-width', 'min-width']
 
 
 allowed_attributes = {
