@@ -6,9 +6,10 @@
     <title>{{ note.title }}</title>
 {% endblock %}
 {% block content %}
+    {% if note %}
     <div class="top-section">
         {% if view %}
-            <span class="collection"><i class="fas fa-folder-open"></i> {{ note_collection.title }}</span>
+        <span class="collection"><i class="fas fa-folder-open"></i> {{ note_collection.title }}</span>
         <div class="options">
             <a href="{{ url_for('edit.edit_note', uuid=note.uuid) }}" title="Edit">Edit <i class="fas fa-edit"></i></a>
             <a href="{{ url_for('delete.delete_note', uuid=note.uuid) }}" title="Delete"><i class="fas fa-trash-alt"></i></a>
@@ -23,4 +24,5 @@
     <div class="note-content">
     {{ note.content|safe }}
     </div>
+    {% endif %}
 {% endblock %}

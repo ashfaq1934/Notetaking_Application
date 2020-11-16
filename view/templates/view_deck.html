@@ -6,6 +6,7 @@
     <title>{{ deck.title }}</title>
 {% endblock %}
 {% block content %}
+    {% if deck %}
     <div class="top-section">
         {% if view %}
             <span class="collection"><i class="fas fa-folder-open"></i> {{ deck_collection.title }}</span>
@@ -56,8 +57,10 @@
         <a class="create-flashcard" href="{{ url_for('create.create_flashcard') }}">Create a flashcard</a>
     {% endif %}
     </div>
+    {% endif %}
 {% endblock %}
 {% block extra_js %}
+    {% if flashcards %}
     <script>
         const cards = document.querySelectorAll(".card__inner");
 
@@ -67,4 +70,5 @@
             });
         });
     </script>
+    {% endif %}
 {% endblock %}
