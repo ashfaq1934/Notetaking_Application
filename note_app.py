@@ -58,9 +58,20 @@ def root():
         .join(User, Collection.user_id == User.id).filter(User.email == session['user'])\
         .order_by(desc('edited')).limit(3).all()
 
+    decks_list = []
     decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .order_by(desc('edited')).limit(3).all()
+
+    for deck in decks:
+        decks_list.append(deck.__dict__)
+
+    for deck in decks_list:
+        flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck['id']).all()
+        flashcards_list = []
+        for flashcard in flashcards:
+            flashcards_list.append(flashcard.__dict__)
+        deck['flashcards'] = flashcards_list
 
     return render_template('main.html', notes=notes, decks=decks)
 

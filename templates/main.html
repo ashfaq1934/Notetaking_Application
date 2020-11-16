@@ -1,22 +1,83 @@
 {% extends "base.html" %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
 {% block title %}
     <title>Home</title>
 {% endblock %}
 {% block content %}
-    <div>
     {% if notes %}
-    <h1> Recently Edited Notes</h1>
+    <div class="notes-section">
+    <h2>Recently Edited Notes</h2>
+    <div class="notes">
     {% for note in notes %}
-        <h3>{{ note.title }}</h3>
+        <div class="note">
+            <a href="{{ url_for('view.view_note', uuid=note.uuid) }}">
+                <h3>{{ note.title }}</h3>
+                <div class="note-content">{{ note.content[:100]|safe }}{% if note.content|length > 100 %}...{% endif %}</div>
+            </a>
+        </div>
     {% endfor %}
+    </div>
     </div>
     {% endif %}
     {% if decks %}
-    <div>
-    <h1>Recently Edited Decks</h1>
+    <div class="decks-section">
+    <h2>Recently Edited Decks</h2>
+    <div class="decks">
     {% for deck in decks %}
-        <h3>{{ deck.title }}</h3>
+        <div class="deck-title">
+            <a href="{{ url_for('view.view_deck', uuid=deck.uuid) }}"><h3>{{ deck.title }}</h3></a>
+        <div class="deck-options">
+            <a href="{{ url_for('edit.edit_deck', uuid=deck.uuid) }}" title="Edit">Edit <i class="fas fa-edit"></i></a>
+            <a href="{{ url_for('delete.delete_deck', uuid=deck.uuid) }}" title="Delete"><i class="fas fa-trash-alt"></i></a>
+        </div>
+        </div>
+        <div class="deck">
+        {% for flashcard in deck.flashcards %}
+        <div class="card">
+            <div class="card__inner">
+                <div class="card__face card__face--front">
+                    <div class="card-title-section">
+                        <span>{{ flashcard.title }}</span>
+                        <span class="flashcards-options">
+                            <a href="{{ url_for('edit.edit_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url_for('delete.delete_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-trash-alt"></i></a>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div>{{ flashcard.term|safe }}</div>
+                    </div>
+                </div>
+                <div class="card__face card__face--back">
+                    <div class="card-title-section">
+                        <span>{{ flashcard.title }}</span>
+                        <span class="flashcards-options">
+                            <a href="{{ url_for('edit.edit_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url_for('delete.delete_flashcard', uuid=flashcard.uuid) }}"><i class="fas fa-trash-alt"></i></a>
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div>{{ flashcard.definition|safe }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
     {% endfor %}
     </div>
+    </div>
     {% endif %}
+{% endblock %}
+{% block extra_js %}
+    <script>
+        const cards = document.querySelectorAll(".card__inner");
+
+        cards.forEach(card => {
+            card.addEventListener("click", function (e) {
+                card.classList.toggle('is-flipped');
+            });
+        });
+    </script>
 {% endblock %}
