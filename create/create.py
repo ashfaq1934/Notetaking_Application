@@ -15,8 +15,23 @@ engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread
 Session = sessionmaker(bind=engine)
 db_session = Session()
 
-allowed_tags = ['div', 'table', 'tr', 'td', 'tbody', 'br', 'p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
-attrs = {'*': ['*']}
+allowed_tags = ['a', 'abbr', 'acronym', 'blockquote', 'address', 'b', 'br', 'div', 'dl', 'dt',
+                'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img',
+                'li', 'ol', 'p', 'pre', 'q', 's', 'em', 'small', 'strike', 'strong',
+                'span', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th',
+                'thead', 'tr', 'tt', 'u', 'ul']
+
+allowed_styles = [
+    'color', 'background-color', 'font', 'font-weight',
+    'height', 'max-height', 'min-height',
+    'width', 'max-width', 'min-width', ]
+
+
+allowed_attributes = {
+    '*': ['class', 'title', 'style'],
+    'a': ['href', 'rel'],
+    'img': ['alt', 'src', 'width', 'height', 'align', 'style']
+}
 
 
 @create.route('/collection/', methods=['GET', 'POST'])
@@ -68,8 +83,8 @@ def create_note():
 
         title = bleach.clean(request.form['title'])
         collection = bleach.clean(request.form['collection'])
-        data = bleach.clean(request.form['editordata'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
-                            attributes=attrs, styles=['*'])
+        data = bleach.clean(request.form['editordata'], tags=allowed_tags, attributes=allowed_attributes,
+                            styles=allowed_styles, protocols=['data'], strip=True)
         if not title:
             flash('Please include title')
             return redirect(url_for('create.create_note'))
@@ -126,10 +141,12 @@ def create_flashcard():
     if request.method == 'POST':
         title = bleach.clean(request.form['title'])
         deck = bleach.clean(request.form['deck'])
-        term = bleach.clean(request.form['term'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
-                            attributes=attrs, styles=['background-colour'])
-        definition = bleach.clean(request.form['definition'], tags=bleach.sanitizer.ALLOWED_TAGS + allowed_tags,
-                                  attributes=attrs, styles=['background-colour'])
+
+        term = bleach.clean(request.form['term'], tags=allowed_tags, attributes=allowed_attributes,
+                            styles=allowed_styles, protocols=['data'], strip=True)
+
+        definition = bleach.clean(request.form['definition'], tags=allowed_tags, attributes=allowed_attributes,
+                                  styles=allowed_styles, protocols=['data'], strip=True)
         if not title:
             flash('Please include title')
             return redirect(url_for('create.create_flashcard'))
