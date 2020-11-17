@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, flash, session
+from flask import Flask, request, render_template, session
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
@@ -58,43 +58,29 @@ def root():
         .join(User, Collection.user_id == User.id).filter(User.email == session['user'])\
         .order_by(desc('edited')).limit(3).all()
 
-    decks_list = []
     decks = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .order_by(desc('edited')).limit(3).all()
-
-    for deck in decks:
-        decks_list.append(deck.__dict__)
-
-    for deck in decks_list:
-        flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck['id']).all()
-        flashcards_list = []
-        for flashcard in flashcards:
-            flashcards_list.append(flashcard.__dict__)
-        deck['flashcards'] = flashcards_list
 
     return render_template('main.html', notes=notes, decks=decks)
 
 
 @app.route('/browse/', methods=['GET'])
 def browse():
-    recent_notes = db_session.query(Note).filter(Note.public == True).order_by(desc('edited')).limit(3).all()
-    recent_decks = db_session.query(Deck).filter(Note.public == True).order_by(desc('edited')).limit(3).all()
     query = request.args.get('query')
     if query:
         search = "%{}%".format(query)
-        searched_notes = db_session.query(Note).filter(Note.title.like(search)).all()
+        searched_notes = db_session.query(Note).filter(Note.public == True).filter(Note.title.like(search)).all()
         searched_decks = db_session.query(Deck).filter(Deck.public == True).filter(Deck.title.like(search)).all()
-        searched_collections = db_session.query(Deck).filter(Collection.public == True)\
+        searched_collections = db_session.query(Collection).filter(Collection.public == True)\
             .filter(Collection.title.like(search)).all()
-        print(searched_notes)
 
     else:
         searched_notes = None
         searched_decks = None
         searched_collections = None
-    return render_template('browse.html', recent_notes=recent_notes, recent_decks=recent_decks, searched_notes=searched_notes,
-                           searched_decks=searched_decks, searched_collections=searched_collections)
+    return render_template('browse.html', searched_notes=searched_notes, searched_decks=searched_decks,
+                           searched_collections=searched_collections)
 
 
 @app.route('/search/', methods=['GET'])

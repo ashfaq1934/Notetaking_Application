@@ -1,5 +1,5 @@
 .notes-section{
-    margin-bottom: 5%;
+    margin-bottom: 3%;
 }
 .notes-section > h2{
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -11,89 +11,33 @@
     padding-bottom: 1%;
     margin-bottom: 3%;
 }
-.notes{
-    display: flex;
+.result{
+  display: flex;
+  width: 50%;
+  border: 1px solid grey;
+  margin-bottom: 2%;
 }
-.note{
-    flex-basis: 20%;
-    margin-right: 10%;
-    padding: 1%;
-    box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
-}.note > a{
-    color: black;
- }
-.note > h3{
-    border-bottom: 1px solid black;
-    padding: 2%;
-    margin-top: 0;
+.image{
+  background-color: #0E6BA8;
+  color: white;
+  padding: 2%;
+  font-size: 30px;
 }
-.decks > .deck{
-    display: flex;
+.text{
+  flex: 1;
+  padding: 2%;
+  align-self: center;
 }
-.deck-title{
-    display: flex;
+.text > *{
+  display: flex;
 }
-.deck-title > a{
-    color: black;
+.text > .title > a{
+  color: #3abab6;
 }
-.deck-title > a > h3{
-    font-size: 20px;
+.text > .title{
+  font-size: 20px;
 }
-.deck-options{
-    align-self: center;
-    margin-left: 2%;
-}
-.deck-options > a{
-    color: black;
-}
-.card {
-    flex-basis: 15%;
-    height: 150px;
-    margin-right: 2%;
-    margin-bottom: 2%;
-}
-.card__inner {
-    width: 100%;
-    height: 100%;
-    transition: transform 1s;
-    transform-style: preserve-3d;
-    cursor: pointer;
-    position: relative;
-}
-.card__inner.is-flipped {
-    transform: rotateY(180deg);
-}
-.card__face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    overflow: hidden;
-    border-radius: 6px;
-    box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
-}
-.card-title-section{
-    padding: 2%;
-    color: white;
-    background-color: #0E6BA8;
-}
-.card-body{
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    height: 80%;
-}
-.card__face--back {
-    transform: rotateY(180deg);
-}
-.card__content {
-    width: 100%;
-    height: 100%;
-}
-.flashcards-options{
-    float: right;
-}
-.flashcards-options > a{
-    color: whitesmoke;
+.text > .type{
+  margin-top: 1%;
+  font-size: 12px;
 }
