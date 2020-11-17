@@ -1,33 +1,36 @@
 {% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/browse.css') }}">
+{% endblock %}
 {% block title %}
     <title>Browse</title>
 {% endblock %}
 {% block content %}
     <h1>Browse Public Resources</h1>
-    <form action="" method="get">
-    <input type="text" name="query"/>
-    <input type="submit" value="Search">
-    </form>
+    <div class="search-section">
+        <form action="" method="search">
+            <input class="query" type="text" name="query" />
+            <input class="submit" type="submit" value="Search" />
+        </form>
+    </div>
     {% if searched_notes %}
-    <div>
+    <div class="search-results">
     {% for note in searched_notes %}
-        <h4>{{ note.title }}</h4>
+        <div class="result">
+            <h4><a href="{{ url_for('view.view_note', uuid=note.uuid) }}">{{ note.title }}</a></h4>
+        </div>
     {% endfor %}
     </div>
     {% endif %}
     {% if searched_decks %}
-    <div>
     {% for deck in searched_decks %}
         <h4>{{ deck.title }}</h4>
     {% endfor %}
-    </div>
     {% endif %}
     {% if searched_collections %}
-    <div>
     {% for collection in searched_collections %}
         <h4>{{ collection.title }}</h4>
     {% endfor %}
-    </div>
     {% endif %}
     <div>
     <h2>Recently edited notes</h2>
