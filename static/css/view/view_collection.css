@@ -38,10 +38,22 @@
 }.note > a{
     color: black;
  }
-.note > h3{
+.note-title-section{
     border-bottom: 1px solid black;
     padding: 2%;
+    margin-bottom: 1em;
     margin-top: 0;
+}
+.note-title{
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+}
+.note-options{
+    float: right;
+}
+.note-options > a{
+    color: black;
 }
 .decks > .deck{
     display: flex;

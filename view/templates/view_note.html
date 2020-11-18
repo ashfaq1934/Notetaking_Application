@@ -8,8 +8,10 @@
 {% block content %}
     {% if note %}
     <div class="top-section">
+        <span class="type"><i class="fas fa-sticky-note"></i> Note</span>
         {% if view %}
-        <span class="collection"><i class="fas fa-folder-open"></i> {{ note_collection.title }}</span>
+            <span class="collection"><a href="{{ url_for('view.view_collection', uuid=note_collection.uuid) }}">
+                <i class="fas fa-folder-open"></i> {{ note_collection.title }}</a></span>
         <div class="options">
             <a href="{{ url_for('edit.edit_note', uuid=note.uuid) }}" title="Edit">Edit <i class="fas fa-edit"></i></a>
             <a href="{{ url_for('delete.delete_note', uuid=note.uuid) }}" title="Delete"><i class="fas fa-trash-alt"></i></a>

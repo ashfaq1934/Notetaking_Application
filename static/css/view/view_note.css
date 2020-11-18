@@ -9,12 +9,19 @@
     border-right: 1px solid rgba(122, 128, 131, 0.6);
     padding: 1%;
     align-self: center;
-    color: #7A8083;
+}
+.collection > a{
+    color: black;
 }
 .date{
     flex: 1;
     align-self: center;
     padding: 1%;
+}
+.type{
+    align-self: center;
+    padding: 1%;
+    border-right: 1px solid rgba(122, 128, 131, 0.6);
 }
 .options{
     flex: 3;
@@ -22,7 +29,7 @@
     padding: 1%;
 }
 .options > *{
-    color: #7A8083;
+    color: black;
     margin-right: 2%;
     margin-left: auto;
     order: 2;
