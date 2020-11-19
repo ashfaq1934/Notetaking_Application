@@ -1,12 +1,14 @@
+html,
 body{
     margin: 0;
+    height: 92.1%;
 }
 a{
     text-decoration: none;
 }
 nav{
     justify-content: space-between;
-    background-color: #FFC05C;
+    background-color: #4ebdc0;
     display: flex;
     border-bottom: 1px solid black;
 }
@@ -84,7 +86,7 @@ nav > ul > li > a{
 }
 .create-bar > ul > li{
     padding: 0.5%;
-    background-color: #34AD6C;
+    background-color: #239658;
     text-align: center;
     border-radius: 500px;
     margin-right: 2%;
@@ -113,13 +115,11 @@ nav > ul > li > a{
 }
 section{
     display: flex;
+    height: 100%;
 }
 aside{
     width: 15%;
-    margin-top: 1%;
-}
-.collections_panel{
-    background-color: #946332;
+    background-color: #3e4247;
 }
 main{
     flex-grow: 1;
@@ -129,7 +129,8 @@ main{
     margin-left: 2% ;
 }
 .accordion {
-    background-color: #946332;
+    background-color: #3e4247;
+    color: whitesmoke;
     cursor: pointer;
     padding: 18px;
     text-align: left;
@@ -137,7 +138,7 @@ main{
     border-bottom: 1px solid black;
 }
 .active, .accordion:hover {
-  background-color: #eab053;
+  background-color: #4ebdc0;
 }
 .accordion-dropdown {
     font-weight: bold;
@@ -146,7 +147,7 @@ main{
 }
 .panel {
   padding: 0 18px;
-  background-color: #eab053;
+  background-color: #4ebdc0;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
@@ -155,14 +156,15 @@ main{
     list-style: none;
 }
 .panel > ul > li > a{
-    color: black;
+    color: whitesmoke;
 }
 .collection_link{
-    color: black;
+    color: whitesmoke;
     text-decoration: none;
 }
 .collection_title{
     padding: 5%;
+    color: whitesmoke;
     font-size: x-large;
     border-bottom: 1px solid black;
 }
