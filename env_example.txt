@@ -1,8 +1,8 @@
 # Copy and rename this file as '.env', change environment variables to match your environment and configuration.
 
 SECRET_KEY='xxxx'
-DATABASE_HOST='localhost'
-DATABASE_USER='root'
-DATABASE_PASSWORD='root'
-DATABASE_NAME='database'
-DATABASE_PORT='3306'
+DATABASE_HOST=localhost
+DATABASE_USER=root
+DATABASE_PASSWORD=root
+DATABASE_NAME=database
+DATABASE_PORT=3306

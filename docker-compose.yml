@@ -2,8 +2,8 @@ version: '3'
 
 services:
   db:
-    container_name: 'db'
     image: mariadb
+    container_name: db
     env_file:
       - .env
     ports:
@@ -16,3 +16,16 @@ services:
     volumes:
       - /database:/var/lib/mysql
     restart: always
+
+  app:
+    build: .
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - .:/code
+    restart: always
+    ports:
+      - '5000:5000'
+    depends_on:
+      - db

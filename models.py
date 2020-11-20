@@ -56,13 +56,12 @@ class Note(Base):
     edited = Column(DateTime, nullable=False)
 
 
-if os.getenv('ENVIRONMENT') == 'testing' or os.getenv('ENVIRONMENT') == 'live':
-    db_host = os.getenv("DATABASE_HOST")
-    db_user = os.getenv("DATABASE_USER")
-    db_password = os.getenv("DATABASE_PASSWORD")
-    db_name = os.getenv("DATABASE_NAME")
-    db_port = os.getenv("DATABASE_PORT")
-    engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
-else:
-    engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False})
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
+
+
 Base.metadata.create_all(engine)
