@@ -20,6 +20,7 @@ db_name = os.getenv("DATABASE_NAME")
 db_port = os.getenv("DATABASE_PORT")
 engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
 
+
 Session = sessionmaker(bind=engine)
 
 
@@ -94,7 +95,6 @@ def register():
 
 @authentication.route('/login/', methods=['GET', 'POST'])
 def login():
-    db_session = Session()
     if request.method == 'POST':
         try:
             email = bleach.clean(request.form['email'])
