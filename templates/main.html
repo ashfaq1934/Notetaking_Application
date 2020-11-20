@@ -42,15 +42,10 @@
     </div>
     </div>
     {% endif %}
-{% endblock %}
-{% block extra_js %}
-    <script>
-        const cards = document.querySelectorAll(".card__inner");
-
-        cards.forEach(card => {
-            card.addEventListener("click", function (e) {
-                card.classList.toggle('is-flipped');
-            });
-        });
-    </script>
+    {% if not collections and not notes and not decks %}
+        <p>No learning resources or collections. Get started by creating a <a href="{{ url_for('create.create_collection') }}">collection</a>.</p>
+    {% endif %}
+    {% if not notes and not decks %}
+        <p>No recently edited notes or decks.</p>
+    {% endif %}
 {% endblock %}

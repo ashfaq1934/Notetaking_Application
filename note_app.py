@@ -1,32 +1,41 @@
 from flask import Flask, request, render_template, session
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
-from models import User, Collection, Note, Flashcard, Deck
+from models import User, Collection, Note, Deck
 from authentication.auth import authentication, requires_login
 from view.view import view
 from public.public import public
 from create.create import create
 from edit.edit import edit
 from delete.delete import delete
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 app = Flask(__name__, static_folder="static")
-app.secret_key = 'A0Zr98j/3yXR~XHH!jmN]LWX/,?RT'
+app.secret_key = os.getenv("SECRET_KEY")
 app.register_blueprint(authentication)
 app.register_blueprint(view)
 app.register_blueprint(public)
 app.register_blueprint(create)
 app.register_blueprint(edit)
 app.register_blueprint(delete)
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False})
 
-Session = sessionmaker(bind=engine)
-db_session = Session()
+
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
+
+Session = sessionmaker(bind=engine, autocommit=True)
 
 
 @app.context_processor
 def get_collections():
+    db_session = Session()
     try:
         collections = db_session.query(Collection).join(User, Collection.user_id == User.id) \
             .filter(User.email == session['user']).all()
@@ -38,6 +47,7 @@ def get_collections():
 @app.context_processor
 def resources_processor():
     def get_resources(id):
+        db_session = Session()
         notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
             .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
             .filter(Collection.user_id == User.id).filter(Note.collection_id == id).all()
@@ -54,6 +64,7 @@ def resources_processor():
 @app.route('/', methods=['GET'])
 @requires_login
 def root():
+    db_session = Session()
     notes = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user'])\
         .order_by(desc('edited')).limit(3).all()
@@ -67,6 +78,7 @@ def root():
 
 @app.route('/browse/', methods=['GET'])
 def browse():
+    db_session = Session()
     query = request.args.get('query')
     if query:
         search = "%{}%".format(query)
@@ -85,6 +97,7 @@ def browse():
 
 @app.route('/search/', methods=['GET'])
 def search():
+    db_session = Session()
     query = request.args.get('query')
     if query:
         search_query = "%{}%".format(query)

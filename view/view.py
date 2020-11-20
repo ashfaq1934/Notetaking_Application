@@ -2,20 +2,28 @@ from flask import Blueprint, render_template, session
 from models import User, Collection, Note, Flashcard, Deck
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
 from authentication.auth import requires_login
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 view = Blueprint('view', __name__, url_prefix='/view/', template_folder='templates')
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
 
-Session = sessionmaker(bind=engine)
-db_session = Session()
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
+
+Session = sessionmaker(bind=engine, autoflush=True)
 
 
 @view.route('/collection/<uuid>/')
 @requires_login
 def view_collection(uuid):
+    db_session = Session()
 
     collection = db_session.query(Collection).join(User, Collection.user_id == User.id) \
         .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
@@ -46,6 +54,9 @@ def view_collection(uuid):
             deck['flashcards'] = flashcards_list
     except:
         decks_list = None
+        db_session.rollback()
+    finally:
+        db_session.close()
 
     return render_template('view_collection.html', collection=collection, notes=notes, decks=decks_list, view=view)
 
@@ -53,6 +64,7 @@ def view_collection(uuid):
 @view.route('/note/<uuid>/')
 @requires_login
 def view_note(uuid):
+    db_session = Session()
     try:
         note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
             .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
@@ -64,6 +76,9 @@ def view_note(uuid):
         note = None
         note_collection = None
         view = None
+        db_session.rollback()
+    finally:
+        db_session.close()
 
     return render_template('view_note.html', note=note, view=view, note_collection=note_collection)
 
@@ -71,6 +86,7 @@ def view_note(uuid):
 @view.route('/deck/<uuid>/')
 @requires_login
 def view_deck(uuid):
+    db_session = Session()
     try:
         deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
             .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
@@ -83,11 +99,15 @@ def view_deck(uuid):
             flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()
         except:
             flashcards = None
+            db_session.rollback()
     except:
         deck = None
         deck_collection = None
         view = None
         flashcards = None
+        db_session.rollback()
+    finally:
+        db_session.close()
 
     return render_template('view_deck.html', deck=deck, flashcards=flashcards, view=view,
                            deck_collection=deck_collection)
