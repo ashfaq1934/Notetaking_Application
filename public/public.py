@@ -1,18 +1,26 @@
 from flask import Blueprint, render_template
-from models import User, Collection, Note, Flashcard, Deck
+from models import Collection, Note, Flashcard, Deck
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 public = Blueprint('public', __name__, url_prefix='/public/', template_folder='templates')
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
 
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
 Session = sessionmaker(bind=engine)
-db_session = Session()
 
 
 @public.route('/collection/<uuid>/')
 def view_public_collection(uuid):
+    db_session = Session()
     collection = db_session.query(Collection).filter(Collection.public == True)\
         .filter(Collection.uuid == uuid).first()
     try:
@@ -44,12 +52,14 @@ def view_public_collection(uuid):
 
 @public.route('/note/<uuid>/')
 def view_public_note(uuid):
+    db_session = Session()
     note = db_session.query(Note).filter(Note.public == True).filter(Note.uuid == uuid).first()
     return render_template('view_note.html', note=note)
 
 
 @public.route('/deck/<uuid>/')
 def view_public_deck(uuid):
+    db_session = Session()
     deck = db_session.query(Deck).filter(Deck.public == True).filter(Deck.uuid == uuid).first()
     try:
         flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).all()

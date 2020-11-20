@@ -2,6 +2,7 @@
 *.pyo
 *.db
 .idea/
+.env
 migrations/*
 __pycache__/
 venv/

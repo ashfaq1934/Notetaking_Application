@@ -6,13 +6,21 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 import bleach
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 authentication = Blueprint('auth', __name__, url_prefix='/account/', template_folder='templates')
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
+
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
 
 Session = sessionmaker(bind=engine)
-db_session = Session()
 
 
 def requires_login(f):
@@ -28,6 +36,7 @@ def requires_login(f):
 @authentication.route('/', methods=['GET', 'POST'])
 @requires_login
 def account():
+    db_session = Session()
     user = db_session.query(User).filter(User.email == session['user']).first()
     if request.method == 'POST':
         email = request.form.get('email')
@@ -51,6 +60,7 @@ def account():
 
 @authentication.route('/register/', methods=['GET', 'POST'])
 def register():
+    db_session = Session()
     if request.method == 'POST':
         try:
             email = bleach.clean(request.form['email'])
@@ -84,6 +94,7 @@ def register():
 
 @authentication.route('/login/', methods=['GET', 'POST'])
 def login():
+    db_session = Session()
     if request.method == 'POST':
         try:
             email = bleach.clean(request.form['email'])
@@ -119,12 +130,15 @@ def logout():
 
 
 def check_auth(email, password):
+    db_session = Session()
     try:
         user = db_session.query(User).filter(User.email == email).first()
-        hashed_input = bcrypt.hashpw(password.encode('utf-8'), user.password)
-        if hashed_input == user.password:
+        check = bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8'))
+        print(user)
+        print(check)
+        if check:
             return True
         return False
     except:
-        flash("User doesn't exist, have you registered?")
+        flash("User doesn't exist, have you registeared?")
         return False

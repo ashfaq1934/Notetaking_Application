@@ -7,13 +7,21 @@ from authentication.auth import requires_login
 import bleach
 import uuid
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 create = Blueprint('create', __name__, url_prefix='/create/', template_folder='templates')
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
+
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
 
 Session = sessionmaker(bind=engine)
-db_session = Session()
 
 allowed_tags = ['a', 'abbr', 'acronym', 'blockquote', 'address', 'b', 'br', 'div', 'dl', 'dt',
                 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img',
@@ -37,6 +45,7 @@ allowed_attributes = {
 @create.route('/collection/', methods=['GET', 'POST'])
 @requires_login
 def create_collection():
+    db_session = Session()
     if request.method == 'POST':
         try:
             public_checkbox = request.form.get('public')
@@ -65,8 +74,11 @@ def create_collection():
                 return redirect(url_for('root'))
 
         except IntegrityError:
+            db_session.rollback()
             flash('Provide a title')
             return redirect(url_for('create.create_collection'))
+        finally:
+            db_session.close()
 
     return render_template('create_collection.html')
 
@@ -74,6 +86,7 @@ def create_collection():
 @create.route('/note/', methods=['GET', 'POST'])
 @requires_login
 def create_note():
+    db_session = Session()
     if request.method == 'POST':
         public_checkbox = request.form.get('public')
         if public_checkbox:
@@ -84,7 +97,7 @@ def create_note():
         title = bleach.clean(request.form['title'])
         collection = bleach.clean(request.form['collection'])
         data = bleach.clean(request.form['editordata'], tags=allowed_tags, attributes=allowed_attributes,
-                            styles=allowed_styles, protocols=['data'], strip=True)
+                                styles=allowed_styles, protocols=['data'], strip=True)
         if not title:
             flash('Please include title')
             return redirect(url_for('create.create_note'))
@@ -103,12 +116,14 @@ def create_note():
         db_session.commit()
         flash('Note Saved!')
         return redirect(url_for('view.view_note', uuid=note_uuid))
+
     return render_template('create_note.html')
 
 
 @create.route('/deck/', methods=['GET', 'POST'])
 @requires_login
 def create_deck():
+    db_session = Session()
     if request.method == 'POST':
         public_checkbox = request.form.get('public')
         if public_checkbox:
@@ -138,6 +153,7 @@ def create_deck():
 @create.route('/flashcard/', methods=['GET', 'POST'])
 @requires_login
 def create_flashcard():
+    db_session = Session()
     if request.method == 'POST':
         title = bleach.clean(request.form['title'])
         deck = bleach.clean(request.form['deck'])

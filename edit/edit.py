@@ -6,13 +6,21 @@ from sqlalchemy.exc import IntegrityError
 from authentication.auth import requires_login
 import bleach
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 edit = Blueprint('edit', __name__, url_prefix='/edit/', template_folder='templates')
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
+
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
 
 Session = sessionmaker(bind=engine)
-db_session = Session()
 
 allowed_tags = ['a', 'abbr', 'acronym', 'blockquote', 'address', 'b', 'br', 'div', 'dl', 'dt',
                 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img',
@@ -36,6 +44,7 @@ allowed_attributes = {
 @edit.route('/collection/<uuid>/', methods=['GET', 'POST'])
 @requires_login
 def edit_collection(uuid):
+    db_session = Session()
     collection = db_session.query(Collection).join(User, Collection.user_id == User.id) \
         .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
 
@@ -65,6 +74,7 @@ def edit_collection(uuid):
 @edit.route('/note/<uuid>/', methods=['GET', 'POST'])
 @requires_login
 def edit_note(uuid):
+    db_session = Session()
     note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
@@ -106,6 +116,7 @@ def edit_note(uuid):
 @edit.route('/deck/<uuid>/', methods=['GET', 'POST'])
 @requires_login
 def edit_deck(uuid):
+    db_session = Session()
     deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
@@ -142,6 +153,7 @@ def edit_deck(uuid):
 @edit.route('/flashcard/<uuid>/', methods=['GET', 'POST'])
 @requires_login
 def edit_flashcard(uuid):
+    db_session = Session()
     flashcard = db_session.query(Flashcard).join(Deck, Flashcard.deck_id == Deck.id)\
         .join(Collection, Deck.collection_id == Collection.id).join(User, Collection.user_id == User.id)\
         .filter(User.email == session['user']).filter(Collection.user_id == User.id)\

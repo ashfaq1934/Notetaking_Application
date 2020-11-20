@@ -4,18 +4,28 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 from authentication.auth import requires_login
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 delete = Blueprint('delete', __name__, url_prefix='/delete/', template_folder='templates')
-engine = create_engine('sqlite:///database.db', connect_args={'check_same_thread': False}, echo=True)
+
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+db_port = os.getenv("DATABASE_PORT")
+engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
 
 Session = sessionmaker(bind=engine)
-db_session = Session()
 
 
 @delete.route('/note/<uuid>/')
 @requires_login
 def delete_note(uuid):
+    db_session = Session()
+
     note = db_session.query(Note).join(Collection, Note.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
@@ -29,6 +39,7 @@ def delete_note(uuid):
 @delete.route('/flashcard/<uuid>/')
 @requires_login
 def delete_flashcard(uuid):
+    db_session = Session()
     flashcard = db_session.query(Flashcard).join(Deck, Deck.id == Flashcard.deck_id)\
         .join(Collection, Deck.collection_id == Collection.id).join(User, Collection.user_id == User.id)\
         .filter(User.email == session['user']).filter(Collection.user_id == User.id)\
@@ -45,6 +56,7 @@ def delete_flashcard(uuid):
 @delete.route('/deck/<uuid>/')
 @requires_login
 def delete_deck(uuid):
+    db_session = Session()
     deck = db_session.query(Deck).join(Collection, Deck.collection_id == Collection.id) \
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .filter(Deck.uuid == uuid).first()
@@ -61,6 +73,7 @@ def delete_deck(uuid):
 @delete.route('/collection/<uuid>/')
 @requires_login
 def delete_collection(uuid):
+    db_session = Session()
     collection = db_session.query(Collection).join(User, Collection.user_id == User.id) \
         .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
 
