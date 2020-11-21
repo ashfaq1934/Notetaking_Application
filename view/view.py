@@ -6,17 +6,24 @@ from authentication.auth import requires_login
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
 view = Blueprint('view', __name__, url_prefix='/view/', template_folder='templates')
 
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+PARENT_DIR = os.path.abspath(os.curdir)
+load_dotenv(os.path.join(PARENT_DIR, '.env'))
 db_host = os.getenv("DATABASE_HOST")
 db_user = os.getenv("DATABASE_USER")
 db_password = os.getenv("DATABASE_PASSWORD")
 db_name = os.getenv("DATABASE_NAME")
-db_port = os.getenv("DATABASE_PORT")
 database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
+
+
 engine = create_engine(database_uri)
+print(BASEDIR)
+print(PARENT_DIR)
+print(database_uri)
+print('-------------------------------------------------')
+
 Session = sessionmaker(bind=engine, autoflush=True)
 
 
