@@ -3,8 +3,15 @@ from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, create_
 from dotenv import load_dotenv
 import os
 
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(BASEDIR, '.env'))
 
-load_dotenv()
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
+
 Base = declarative_base()
 
 
@@ -56,12 +63,6 @@ class Note(Base):
     edited = Column(DateTime, nullable=False)
 
 
-db_host = os.getenv("DATABASE_HOST")
-db_user = os.getenv("DATABASE_USER")
-db_password = os.getenv("DATABASE_PASSWORD")
-db_name = os.getenv("DATABASE_NAME")
-db_port = os.getenv("DATABASE_PORT")
-database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
 engine = create_engine(database_uri)
 
 
