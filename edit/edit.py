@@ -18,7 +18,8 @@ db_user = os.getenv("DATABASE_USER")
 db_password = os.getenv("DATABASE_PASSWORD")
 db_name = os.getenv("DATABASE_NAME")
 db_port = os.getenv("DATABASE_PORT")
-engine = create_engine('mysql+pymysql://' + db_user + ':' + db_password + '@' + db_host + '/' + db_name)
+database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
+engine = create_engine(database_uri)
 
 Session = sessionmaker(bind=engine)
 
