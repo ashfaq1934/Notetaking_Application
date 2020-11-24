@@ -129,6 +129,7 @@ main{
     margin-left: 2% ;
 }
 .accordion {
+    display: block;
     background-color: #3e4247;
     color: whitesmoke;
     cursor: pointer;
@@ -140,13 +141,30 @@ main{
 .active, .accordion:hover {
   background-color: #4ebdc0;
 }
+.collection_link{
+    color: whitesmoke;
+    text-decoration: none;
+    padding-right: 50%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    margin-right: 0;
+}
+.collection_title{
+    padding: 5%;
+    color: whitesmoke;
+    font-size: x-large;
+    border-bottom: 1px solid black;
+}
 .accordion-dropdown {
     font-weight: bold;
+    width: 10%;
+    margin: 0;
     float: right;
-    margin-left: 5px;
+}
+.accordion-dropdown > i{
+    padding: 10%;
 }
 .panel {
-  padding: 0 18px;
   background-color: #4ebdc0;
   max-height: 0;
   overflow: hidden;
@@ -154,17 +172,19 @@ main{
 }
 .panel > ul{
     list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.panel > ul > li{
+    width: 90%;
+    padding: 5%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2)
 }
 .panel > ul > li > a{
     color: whitesmoke;
+    display: block;
 }
-.collection_link{
-    color: whitesmoke;
-    text-decoration: none;
-}
-.collection_title{
-    padding: 5%;
-    color: whitesmoke;
-    font-size: x-large;
-    border-bottom: 1px solid black;
+.panel > ul > li > a >i{
+    margin-right: 5%;
+    margin-left: 2%;
 }

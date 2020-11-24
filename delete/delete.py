@@ -20,10 +20,6 @@ database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
 
 
 engine = create_engine(database_uri)
-print(BASEDIR)
-print(PARENT_DIR)
-print(database_uri)
-print('-------------------------------------------------')
 
 Session = sessionmaker(bind=engine)
 

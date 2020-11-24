@@ -29,9 +29,6 @@ db_user = os.getenv("DATABASE_USER")
 db_password = os.getenv("DATABASE_PASSWORD")
 db_name = os.getenv("DATABASE_NAME")
 database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
-print(BASEDIR)
-print(database_uri)
-print('-------------------------------------------------')
 engine = create_engine(database_uri)
 
 

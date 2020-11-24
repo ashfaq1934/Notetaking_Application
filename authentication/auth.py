@@ -22,10 +22,6 @@ database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
 
 
 engine = create_engine(database_uri)
-print(BASEDIR)
-print(PARENT_DIR)
-print(database_uri)
-print('-------------------------------------------------')
 
 Session = sessionmaker(bind=engine)
 
@@ -140,8 +136,7 @@ def check_auth(email, password):
     try:
         user = db_session.query(User).filter(User.email == email).first()
         check = bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8'))
-        print(user)
-        print(check)
+
         if check:
             return True
         return False

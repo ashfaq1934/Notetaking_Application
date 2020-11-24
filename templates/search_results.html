@@ -14,7 +14,7 @@
             <div class="image"><i class="fas fa-sticky-note"></i></div>
             <div class="text">
                 <span class="title">
-                    <a href="{{ url_for('view.view_public_note', uuid=result.uuid) }}">{{ result.title }}</a>
+                    <a href="{{ url_for('view.view_note', uuid=result.uuid) }}">{{ result.title }}</a>
                 </span>
                 <span class="type">Note</span>
             </div>
@@ -27,7 +27,7 @@
             <div class="image"><i class="fas fa-layer-group"></i></div>
             <div class="text">
                 <span class="title">
-                    <a href="{{ url_for('view.view_public_deck', uuid=result.uuid) }}">{{ result.title }}</a>
+                    <a href="{{ url_for('view.view_deck', uuid=result.uuid) }}">{{ result.title }}</a>
                 </span>
                 <span class="type">Deck</span>
             </div>
@@ -40,12 +40,15 @@
             <div class="image"><i class="fas fa-folder-open"></i></div>
             <div class="text">
                 <span class="title">
-                    <a href="{{ url_for('view.view_public_collection', uuid=result.uuid) }}">{{ result.title }}</a>
+                    <a href="{{ url_for('view.view_collection', uuid=result.uuid) }}">{{ result.title }}</a>
                 </span>
                 <span class="type">Collection</span>
             </div>
         </div>
     {% endfor %}
+    {% endif %}
+    {% if not searched_notes and not searched_decks and not searched_collections %}
+        <p>No results returned.</p>
     {% endif %}
     </div>
 {% endblock %}

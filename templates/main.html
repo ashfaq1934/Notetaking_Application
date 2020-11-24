@@ -45,7 +45,7 @@
     {% if not collections and not notes and not decks %}
         <p>No learning resources or collections. Get started by creating a <a href="{{ url_for('create.create_collection') }}">collection</a>.</p>
     {% endif %}
-    {% if not notes and not decks %}
+    {% if collections and not notes and not decks %}
         <p>No recently edited notes or decks.</p>
     {% endif %}
 {% endblock %}
