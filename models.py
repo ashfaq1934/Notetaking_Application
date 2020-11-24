@@ -65,5 +65,4 @@ class Note(Base):
 
 engine = create_engine(database_uri)
 
-
 Base.metadata.create_all(engine)

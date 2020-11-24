@@ -23,10 +23,6 @@ database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
 
 
 engine = create_engine(database_uri)
-print(BASEDIR)
-print(PARENT_DIR)
-print(database_uri)
-print('-------------------------------------------------')
 
 Session = sessionmaker(bind=engine)
 
@@ -64,13 +60,13 @@ def create_collection():
             if not title:
                 flash('Provide a title')
                 return redirect(url_for('create.create_collection'))
-
-            collection_count = db_session.query(Collection).filter(Collection.title == title).count()
+            user = db_session.query(User).filter(User.email == session['user']).first()
+            collection_count = db_session.query(Collection).filter(Collection.title == title)\
+                .filter(Collection.user_id == user.id).count()
             if collection_count >= 1:
                 flash('Collection  already exists')
                 return redirect(url_for('create.create_collection'))
             else:
-                user = db_session.query(User).filter(User.email == session['user']).first()
 
                 collection_uuid = str(uuid.uuid4())
 

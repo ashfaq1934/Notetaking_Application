@@ -68,7 +68,7 @@
     <div class="panel">
         <ul>
             {% for note in get_resources(collection.id)[0] %}
-                <li><a href="{{ url_for('view.view_note', uuid=note.uuid) }}">{{ note.title }}</a></li>
+                <li><a href="{{ url_for('view.view_note', uuid=note.uuid) }}"><i class="fas fa-sticky-note"></i>{{ note.title }}</a></li>
             {% endfor %}
             {% for deck in get_resources(collection.id)[1] %}
                 <li><a href="{{ url_for('view.view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a></li>
