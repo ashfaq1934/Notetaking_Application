@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create/create_collection.css') }}">
+{% endblock %}
+{% block title %}
+    {% if edit %}
+    <title>{{ collection.title }}</title>
+    {% else %}
+    <title>Create Collection</title>
+    {% endif %}
+{% endblock %}
+{% block content %}
+{% if edit %}
+    <form action="" method="POST" name="myForm" onsubmit="validateForm()">
+    <input class="title-input" type="text" name="title" value="{{ collection.title }}" />
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch"><input type="checkbox" name="public" {% if collection.public %}checked="checked"{% endif %}><div class="slider round"></div></label>
+    </div>
+    </form>
+{% else %}
+    <form action="" method="POST" name="myForm" onsubmit="validateForm()">
+    <input class="title-input" type="text" name="title" placeholder="New Collection" />
+    <div class="buttons-container">
+        <input class="save" type="submit" value="Save">
+        <label class="switch"><input type="checkbox" name="public"><div class="slider round"></div></label>
+    </div>
+    </form>
+{% endif %}
+{% endblock %}

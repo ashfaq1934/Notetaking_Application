@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+{% block title %}
+    <title>Home</title>
+{% endblock %}
+{% block content %}
+    {% if notes %}
+    <div class="notes-section">
+    <h2>Recently Edited Notes</h2>
+    <div class="notes">
+    {% for note in notes %}
+        <div class="result">
+            <div class="image"><i class="fas fa-sticky-note"></i></div>
+            <div class="text">
+                <span class="title">
+                    <a href="{{ url_for('view.view_note', uuid=note.uuid) }}">{{ note.title }}</a>
+                </span>
+                <span class="type">Note</span>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    </div>
+    {% endif %}
+    {% if decks %}
+    <div class="decks-section">
+    <h2>Recently Edited Decks</h2>
+    <div class="decks">
+    {% for deck in decks %}
+        <div class="result">
+            <div class="image"><i class="fas fa-layer-group"></i></div>
+            <div class="text">
+                <span class="title">
+                    <a href="{{ url_for('view.view_deck', uuid=deck.uuid) }}">{{ deck.title }}</a>
+                </span>
+                <span class="type">Deck</span>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    </div>
+    {% endif %}
+    {% if not collections and not notes and not decks %}
+        <p>No learning resources or collections. Get started by creating a <a href="{{ url_for('create.create_collection') }}">collection</a>.</p>
+    {% endif %}
+    {% if collections and not notes and not decks %}
+        <p>No recently edited notes or decks.</p>
+    {% endif %}
+{% endblock %}

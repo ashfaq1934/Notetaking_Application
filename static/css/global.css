@@ -1,0 +1,190 @@
+html,
+body{
+    margin: 0;
+    height: 92.1%;
+}
+a{
+    text-decoration: none;
+}
+nav{
+    justify-content: space-between;
+    background-color: #4ebdc0;
+    display: flex;
+    border-bottom: 1px solid black;
+}
+nav > ul{
+    display: flex;
+    list-style: none;
+    flex-grow: 15;
+    font-size: 20px;
+}
+nav > ul > li{
+    padding: 0.5%;
+    display: block;
+    align-self: center;
+    margin-right: 5%;
+}
+nav > ul > li > a{
+    color: #000;
+}
+.top-bar{
+    flex-grow: 1;
+}
+.site-name{
+    display: flex;
+    padding: 1%;
+    font-size: 30px;
+    flex-grow: 1;
+}
+.account{
+    display: flex;
+    flex-grow: 3;
+    padding: 1%;
+    font-size: 20px;
+}
+.account > span{
+    padding: 5%;
+    margin-right: 5%;
+    width: 100%;
+}
+.account > span > a{
+    color: #000;
+}
+.search{
+    display: flex;
+    flex-grow: 10;
+}
+.search > form{
+    align-self: center;
+}
+.search > form{
+    width: 100%;
+}
+.search > form > .query{
+    width: 50%;
+    padding: 1%;
+    border: none;
+}
+.searchButton{
+    border: none;
+    padding: 1%;
+    background-color: white;
+}
+.create-bar{
+    background-color: white;
+    border-bottom: 1px solid black;
+    display: flex;
+}
+.create-bar > ul{
+    list-style: none;
+    display: flex;
+    flex-grow: 1;
+    align-self: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 7%;
+}
+.create-bar > ul > li{
+    padding: 0.5%;
+    background-color: #239658;
+    text-align: center;
+    border-radius: 500px;
+    margin-right: 2%;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    float: left;
+}
+.create-bar > ul > li > a{
+    color: #fff;
+}
+.flash-container{
+    background-color: #c7edcb;
+    animation: cssAnimation 0s 5s forwards;
+}
+.flashes{
+    padding: 1%;
+    list-style: none;
+    margin: 0;
+}
+@keyframes cssAnimation {
+  to   {
+      display: none;
+      height: 0;
+      visibility: hidden;
+  }
+}
+section{
+    display: flex;
+    height: 100%;
+}
+aside{
+    width: 15%;
+    background-color: #3e4247;
+}
+main{
+    flex-grow: 1;
+}
+.content{
+    padding: 1%;
+    margin-left: 2% ;
+}
+.accordion {
+    display: block;
+    background-color: #3e4247;
+    color: whitesmoke;
+    cursor: pointer;
+    padding: 18px;
+    text-align: left;
+    transition: 0.4s;
+    border-bottom: 1px solid black;
+}
+.active, .accordion:hover {
+  background-color: #4ebdc0;
+}
+.collection_link{
+    color: whitesmoke;
+    text-decoration: none;
+    padding-right: 50%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    margin-right: 0;
+}
+.collection_title{
+    padding: 5%;
+    color: whitesmoke;
+    font-size: x-large;
+    border-bottom: 1px solid black;
+}
+.accordion-dropdown {
+    font-weight: bold;
+    width: 10%;
+    margin: 0;
+    float: right;
+}
+.accordion-dropdown > i{
+    padding: 10%;
+}
+.panel {
+  background-color: #4ebdc0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+.panel > ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.panel > ul > li{
+    width: 90%;
+    padding: 5%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2)
+}
+.panel > ul > li > a{
+    color: whitesmoke;
+    display: block;
+}
+.panel > ul > li > a >i{
+    margin-right: 5%;
+    margin-left: 2%;
+}

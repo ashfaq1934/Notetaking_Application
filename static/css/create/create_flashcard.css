@@ -1,0 +1,48 @@
+.title-input{
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 1px solid black;
+  margin-bottom: 2%;
+  padding: 1%;
+  height: 10%;
+  font-size: x-large;
+}
+.options-container{
+  float: right;
+  width: 20%;
+}
+.deck-select{
+  margin-top: 1%;
+  margin-right: 10%;
+  padding: 2%;
+}
+.submit{
+  padding-left: 1%;
+  padding-right: 1%;
+  padding-bottom: 0.5%;
+  padding-top: 0.5%;
+  font-size: medium;
+  background-color: #2BA3E2;
+  color: #fff;
+  border-radius: 5px;
+  border: 0;
+}
+.create-deck{
+  background-color: #0E6BA8;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  padding: 5px;
+  border-radius: 500px;
+}
+.editor{
+  width: 40%;
+  margin-right: 5%;
+  float: left;
+}
+.save-container{
+  margin-top: 3%;
+  width: 100%;
+  float: left;
+}

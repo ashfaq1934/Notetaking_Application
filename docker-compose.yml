@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    container_name: db
+    env_file:
+      - .env
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'studynote_db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - /database:/var/lib/mysql
+    restart: always
+
+  app:
+    build: .
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - .:/code
+    restart: always
+    ports:
+      - '5000:5000'
+    depends_on:
+      - db

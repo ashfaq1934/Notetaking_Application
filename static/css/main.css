@@ -1,0 +1,43 @@
+.notes-section{
+    margin-bottom: 3%;
+}
+.notes-section > h2{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 1%;
+    margin-bottom: 3%;
+}
+.decks-section > h2{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 1%;
+    margin-bottom: 3%;
+}
+.result{
+  display: flex;
+  width: 50%;
+  border: 1px solid grey;
+  margin-bottom: 2%;
+}
+.image{
+  background-color: #0E6BA8;
+  color: white;
+  padding: 2%;
+  font-size: 30px;
+}
+.text{
+  flex: 1;
+  padding: 2%;
+  align-self: center;
+}
+.text > *{
+  display: flex;
+}
+.text > .title > a{
+  color: #3abab6;
+}
+.text > .title{
+  font-size: 20px;
+}
+.text > .type{
+  margin-top: 1%;
+  font-size: 12px;
+}

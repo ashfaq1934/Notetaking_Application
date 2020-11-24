@@ -1,5 +1,16 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, create_engine, MetaData, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, create_engine, ForeignKey
+from dotenv import load_dotenv
+import os
+
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(BASEDIR, '.env'))
+
+db_host = os.getenv("DATABASE_HOST")
+db_user = os.getenv("DATABASE_USER")
+db_password = os.getenv("DATABASE_PASSWORD")
+db_name = os.getenv("DATABASE_NAME")
+database_uri = f'mysql+pymysql://{db_user}:{db_password}@{db_host}/{db_name}'
 
 Base = declarative_base()
 
@@ -20,14 +31,24 @@ class Collection(Base):
     public = Column(Boolean, nullable=False)
 
 
-class Flashcard(Base):
-    __tablename__ = 'flashcard'
+class Deck(Base):
+    __tablename__ = 'deck'
     id = Column(Integer, primary_key=True)
     collection_id = Column(Integer, ForeignKey('collection.id'), nullable=False)
     uuid = Column(String(200), unique=True, nullable=False)
-    term = Column(String(200), nullable=False)
-    definition = Column(Text, nullable=True)
+    title = Column(String(200), nullable=False)
     public = Column(Boolean, nullable=False)
+    edited = Column(DateTime, nullable=False)
+
+
+class Flashcard(Base):
+    __tablename__ = 'flashcard'
+    id = Column(Integer, primary_key=True)
+    deck_id = Column(Integer, ForeignKey('deck.id'), nullable=False)
+    uuid = Column(String(200), unique=True, nullable=False)
+    title = Column(String(200), nullable=False)
+    term = Column(Text, nullable=True)
+    definition = Column(Text, nullable=True)
     edited = Column(DateTime, nullable=False)
 
 
@@ -42,7 +63,6 @@ class Note(Base):
     edited = Column(DateTime, nullable=False)
 
 
-engine = create_engine('sqlite:///database.db')
-
+engine = create_engine(database_uri)
 
 Base.metadata.create_all(engine)

@@ -1,0 +1,40 @@
+.top-section{
+    display: flex;
+    border-bottom: 1px solid rgba(122, 128, 131, 0.6);
+}
+.title{
+    display: flex;
+}
+.collection{
+    border-right: 1px solid rgba(122, 128, 131, 0.6);
+    padding: 1%;
+    align-self: center;
+}
+.collection > a{
+    color: black;
+}
+.date{
+    flex: 1;
+    align-self: center;
+    padding: 1%;
+}
+.type{
+    align-self: center;
+    padding: 1%;
+    border-right: 1px solid rgba(122, 128, 131, 0.6);
+}
+.options{
+    flex: 3;
+    align-self: center;
+    padding: 1%;
+}
+.options > *{
+    color: black;
+    margin-right: 2%;
+    margin-left: auto;
+    order: 2;
+}
+.note-content{
+    display: flex;
+    flex: 1;
+}

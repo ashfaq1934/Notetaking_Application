@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/search_results.css') }}">
+{% endblock %}
+{% block title %}
+    <title>Search Results</title>
+{% endblock %}
+{% block content %}
+    <h1>Results</h1>
+    <div class="results">
+    {% if searched_notes %}
+    {% for result in searched_notes %}
+        <div class="result">
+            <div class="image"><i class="fas fa-sticky-note"></i></div>
+            <div class="text">
+                <span class="title">
+                    <a href="{{ url_for('view.view_note', uuid=result.uuid) }}">{{ result.title }}</a>
+                </span>
+                <span class="type">Note</span>
+            </div>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% if searched_decks %}
+    {% for result in searched_decks %}
+        <div class="result">
+            <div class="image"><i class="fas fa-layer-group"></i></div>
+            <div class="text">
+                <span class="title">
+                    <a href="{{ url_for('view.view_deck', uuid=result.uuid) }}">{{ result.title }}</a>
+                </span>
+                <span class="type">Deck</span>
+            </div>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% if searched_collections %}
+    {% for result in searched_collections %}
+        <div class="result">
+            <div class="image"><i class="fas fa-folder-open"></i></div>
+            <div class="text">
+                <span class="title">
+                    <a href="{{ url_for('view.view_collection', uuid=result.uuid) }}">{{ result.title }}</a>
+                </span>
+                <span class="type">Collection</span>
+            </div>
+        </div>
+    {% endfor %}
+    {% endif %}
+    {% if not searched_notes and not searched_decks and not searched_collections %}
+        <p>No results returned.</p>
+    {% endif %}
+    </div>
+{% endblock %}
