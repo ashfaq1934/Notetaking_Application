@@ -57,7 +57,7 @@ def edit_collection(uuid):
     db_session = Session()
     collection = db_session.query(Collection).join(User, Collection.user_id == User.id) \
         .filter(User.email == session['user']).filter(Collection.uuid == uuid).first()
-
+    # boolean to be used on the template when user is in edit view
     edit = True
     if request.method == 'POST':
         # If the checkbox input is set, set public boolean true, otherwise set to false
@@ -92,6 +92,7 @@ def edit_note(uuid):
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .filter(Collection.user_id == User.id).filter(Note.collection_id == Collection.id) \
         .filter(Note.uuid == uuid).first()
+    # boolean to be used on the template when user is in edit view
     edit = True
     if request.method == 'POST':
         # If the checkbox input is set, set public boolean true, otherwise set to false
@@ -141,6 +142,7 @@ def edit_deck(uuid):
         .join(User, Collection.user_id == User.id).filter(User.email == session['user']) \
         .filter(Collection.user_id == User.id).filter(Deck.collection_id == Collection.id) \
         .filter(Deck.uuid == uuid).first()
+    # boolean to be used on the template when user is in edit view
     edit = True
     if request.method == 'POST':
         # If the checkbox input is set, set public boolean true, otherwise set to false
@@ -181,6 +183,7 @@ def edit_flashcard(uuid):
         .join(Collection, Deck.collection_id == Collection.id).join(User, Collection.user_id == User.id)\
         .filter(User.email == session['user']).filter(Collection.user_id == User.id)\
         .filter(Deck.collection_id == Collection.id) .filter(Flashcard.uuid == uuid).first()
+    # boolean to be used on the template when user is in edit view
     edit = True
     try:
         # Return all decks that belong to the use
