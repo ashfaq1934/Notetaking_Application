@@ -3,6 +3,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create/create_collection.css') }}">
 {% endblock %}
 {% block title %}
+    {# if in edit view, display the form with all the inputs filled in #}
     {% if edit %}
     <title>{{ collection.title }}</title>
     {% else %}
