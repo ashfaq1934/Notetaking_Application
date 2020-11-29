@@ -3,9 +3,11 @@ from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, create_
 from dotenv import load_dotenv
 import os
 
+# Load base directory of application and load the .env file
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASEDIR, '.env'))
 
+# Get data configuration settings and create the database URI
 db_host = os.getenv("DATABASE_HOST")
 db_user = os.getenv("DATABASE_USER")
 db_password = os.getenv("DATABASE_PASSWORD")
@@ -63,6 +65,8 @@ class Note(Base):
     edited = Column(DateTime, nullable=False)
 
 
+# Connect to the database
 engine = create_engine(database_uri)
 
+# Create all tables
 Base.metadata.create_all(engine)

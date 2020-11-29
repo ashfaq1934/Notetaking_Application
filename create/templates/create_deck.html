@@ -10,6 +10,7 @@
     {% endif %}
 {% endblock %}
 {% block content %}
+    {# if in edit view, display the form with all the inputs filled in #}
     {% if edit %}
         <form action="" method="post" name="myForm" onsubmit="validateForm()">
             <input class="title-input" value="{{ deck.title }}" type="text" name="title" placeholder="Title" />
