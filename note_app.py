@@ -40,6 +40,7 @@ engine = create_engine(database_uri)
 # Bind session maker to engine
 Session = sessionmaker(bind=engine, autocommit=True)
 
+
 # Flask template context processor to get all collections that belong to the user
 @app.context_processor
 def get_collections():
@@ -52,6 +53,7 @@ def get_collections():
         return dict(collections=collections)
     except:
         return dict(collections=None)
+
 
 # Flask template context processor to get all resources that belong to the user's collection
 @app.context_processor
@@ -97,6 +99,7 @@ def root():
     return render_template('main.html', notes=notes, decks=decks)
 
 
+# Flask decorator for browsing public resources
 @app.route('/browse/', methods=['GET'])
 def browse():
     # Create database session
@@ -119,6 +122,7 @@ def browse():
                            searched_collections=searched_collections)
 
 
+# Flask decorator for searching for resources that belong to the user
 @app.route('/search/', methods=['GET'])
 def search():
     # Create database session
