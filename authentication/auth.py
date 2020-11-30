@@ -29,6 +29,7 @@ engine = create_engine(database_uri)
 # Bind session maker to engine
 Session = sessionmaker(bind=engine)
 
+
 # Flask view decorator to return the user to the login page if they aren't authenticated
 def requires_login(f):
     @wraps(f)
@@ -38,6 +39,7 @@ def requires_login(f):
             return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return decorated
+
 
 # Flask decorator for the user's account page
 @authentication.route('/', methods=['GET', 'POST'])

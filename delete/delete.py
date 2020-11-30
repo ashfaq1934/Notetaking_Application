@@ -109,12 +109,12 @@ def delete_collection(uuid):
     try:
         # Get all decks that belong to the collection
         deck_items = db_session.query(Deck).filter(Deck.collection_id == collection.id).all()
-        # Delete all the decks that belong to the collection
-        decks = db_session.query(Deck).filter(Deck.collection_id == collection.id).delete()
         # Get all flashcards that belong to the deck and delete them
         for deck in deck_items:
             flashcards = db_session.query(Flashcard).filter(Flashcard.deck_id == deck.id).delete()
             db_session.commit()
+        # Delete all the decks that belong to the collection
+        decks = db_session.query(Deck).filter(Deck.collection_id == collection.id).delete()
         db_session.commit()
     except:
         decks = None
